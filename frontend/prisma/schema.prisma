@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Profile {
+  id          Int      @id @default(autoincrement())
+  name        String
+  title       String
+  bio         String
+  summary     String   // The longer text in the About section
+  email       String
+  location    String
+  resumeUrl   String?
+  avatarUrl   String?  // For the hero section
+  aboutImage  String?  // For the about section
+  yearsOfExperience String @default("0+")
+  modelsDeployed    String @default("0+")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SocialLink {
+  id        Int      @id @default(autoincrement())
+  platform  String   // e.g., "GitHub", "LinkedIn", "Email"
+  url       String
+  icon      String   // Store the icon name from lucide-react
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id        Int      @id @default(autoincrement())
+  name      String
+  category  String   // e.g., "Machine Learning", "LLMs & NLP", "Data & MLOps", "Deployment"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  company     String
+  role        String
+  period      String   // e.g., "2022 - Present"
+  description String?  // Optional summary
+  achievements String  // Stored as JSON string or separated by newlines for now. SQLite doesn't support String[] easily without extra setup, but we can just store as a delimited string or JSON. Let's use a delimited string "||" for simplicity or just a text block.
+  techStack   String   // Comma separated or JSON
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique // Required now
+  description String
+  content     String   @default("") // Markdown content
+  imageUrl    String?
+  demoUrl     String?
+  repoUrl     String?
+  techStack   String   // Comma separated or JSON
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model NavItem {
+  id        Int      @id @default(autoincrement())
+  label     String
+  href      String
+  order     Int      @default(0)
+  visible   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Education {
+  id          Int      @id @default(autoincrement())
+  degree      String
+  school      String
+  period      String
+  details     String?  // Relevant coursework etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Certification {
+  id          Int      @id @default(autoincrement())
+  name        String
+  issuer      String?
+  date        String?
+  url         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String   // Hashed password
+  role      String   @default("admin") // admin or user for future expansion
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

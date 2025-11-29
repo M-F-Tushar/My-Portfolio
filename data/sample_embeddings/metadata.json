@@ -1,0 +1,107 @@
+[
+    {
+        "id": 0,
+        "title": "What is RAG?",
+        "text": "Retrieval-Augmented Generation (RAG) is a technique that combines information retrieval with text generation. It retrieves relevant documents from a knowledge base and uses them to generate informed responses.",
+        "url": "/projects/rag-system",
+        "category": "concept"
+    },
+    {
+        "id": 1,
+        "title": "FAISS Overview",
+        "text": "FAISS (Facebook AI Similarity Search) is a library for efficient similarity search and clustering of dense vectors. It's optimized for billion-scale datasets.",
+        "url": "/projects/rag-system",
+        "category": "tool"
+    },
+    {
+        "id": 2,
+        "title": "Sentence Transformers",
+        "text": "Sentence Transformers is a Python framework for state-of-the-art sentence, text and image embeddings. It's built on top of Hugging Face Transformers.",
+        "url": "/projects/llm-chatbot",
+        "category": "tool"
+    },
+    {
+        "id": 3,
+        "title": "OpenRouter Benefits",
+        "text": "OpenRouter provides a unified API to access multiple LLM providers including OpenAI, Anthropic, Google, and Meta. It offers cost optimization and fallback options.",
+        "url": "/projects/llm-chatbot",
+        "category": "service"
+    },
+    {
+        "id": 4,
+        "title": "Agent Architecture",
+        "text": "AI agents use a perceive-plan-act loop. They break down complex tasks into steps, execute them sequentially, and adapt based on results.",
+        "url": "/projects/agent-demo",
+        "category": "concept"
+    },
+    {
+        "id": 5,
+        "title": "Embedding Models",
+        "text": "Embedding models convert text into dense vector representations. Popular models include all-MiniLM-L6-v2 (fast, 384-dim) and text-embedding-ada-002 (high-quality, 1536-dim).",
+        "url": "/projects/rag-system",
+        "category": "concept"
+    },
+    {
+        "id": 6,
+        "title": "Vector Databases",
+        "text": "Vector databases like FAISS, Pinecone, and Weaviate enable efficient similarity search over embeddings. They use approximate nearest neighbor algorithms.",
+        "url": "/projects/rag-system",
+        "category": "tool"
+    },
+    {
+        "id": 7,
+        "title": "Prompt Engineering",
+        "text": "Effective prompts are clear, specific, and provide context. For RAG, include retrieved context and explicit instructions to avoid hallucination.",
+        "url": "/projects/llm-chatbot",
+        "category": "technique"
+    },
+    {
+        "id": 8,
+        "title": "Context Window Management",
+        "text": "LLMs have token limits (4K-128K). Manage context by truncating old messages, summarizing, or using sliding windows.",
+        "url": "/projects/llm-chatbot",
+        "category": "technique"
+    },
+    {
+        "id": 9,
+        "title": "Agent Safety",
+        "text": "Safe agents require sandboxing, explicit user consent, step limits, timeouts, and transparent execution. Never allow unrestricted file or network access.",
+        "url": "/projects/agent-demo",
+        "category": "safety"
+    },
+    {
+        "id": 10,
+        "title": "Semantic Search",
+        "text": "Semantic search finds documents by meaning rather than keywords. It uses embeddings to compute similarity between queries and documents.",
+        "url": "/projects/rag-system",
+        "category": "concept"
+    },
+    {
+        "id": 11,
+        "title": "LLM Providers",
+        "text": "Major LLM providers include OpenAI (GPT-4), Anthropic (Claude), Google (Gemini), and Meta (Llama). Each has different strengths and pricing.",
+        "url": "/projects/llm-chatbot",
+        "category": "service"
+    },
+    {
+        "id": 12,
+        "title": "Multi-Step Reasoning",
+        "text": "Multi-step reasoning breaks complex problems into simpler sub-problems. Agents use chain-of-thought prompting to show their work.",
+        "url": "/projects/agent-demo",
+        "category": "technique"
+    },
+    {
+        "id": 13,
+        "title": "Deployment Options",
+        "text": "Deploy AI apps using Vercel (serverless), Docker (containerized), or Kubernetes (orchestrated). Consider latency, cost, and scalability.",
+        "url": "#",
+        "category": "deployment"
+    },
+    {
+        "id": 14,
+        "title": "Evaluation Metrics",
+        "text": "Measure RAG quality with precision@k, recall@k, MRR, and NDCG. Measure generation quality with BLEU, ROUGE, and human evaluation.",
+        "url": "/projects/rag-system",
+        "category": "evaluation"
+    }
+]

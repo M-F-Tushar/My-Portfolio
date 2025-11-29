@@ -1,0 +1,27 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "frontend/package.json",
+            "use": "@vercel/next"
+        },
+        {
+            "src": "backend/main.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "backend/main.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "frontend/$1"
+        }
+    ],
+    "env": {
+        "LLM_PROVIDER": "@llm_provider",
+        "OPENROUTER_API_KEY": "@openrouter_api_key"
+    }
+}

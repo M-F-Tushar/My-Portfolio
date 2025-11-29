@@ -1,0 +1,50 @@
+{
+  "name": "ai-portfolio",
+  "version": "1.0.0",
+  "description": "Production-ready AI/ML portfolio showcasing LLMs, RAG, and agent demos",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && uvicorn main:app --reload --port 8000",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && pytest tests/ -v",
+    "test:frontend": "cd frontend && npm run test",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && flake8 .",
+    "type-check": "cd frontend && npm run type-check",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "export": "bash scripts/export_demo.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/ai-portfolio"
+  },
+  "keywords": [
+    "ai",
+    "ml",
+    "portfolio",
+    "llm",
+    "rag",
+    "agent",
+    "nextjs",
+    "fastapi"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

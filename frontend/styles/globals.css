@@ -1,0 +1,303 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties for theming */
+:root {
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Selection styling */
+::selection {
+    background-color: #667eea;
+    color: white;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Custom component classes */
+@layer components {
+    .btn-primary {
+        @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-xl;
+        @apply transform hover:-translate-y-0.5 active:translate-y-0;
+    }
+
+    .btn-secondary {
+        @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+        @apply hover:bg-opacity-90 transform hover:-translate-y-0.5 active:translate-y-0;
+    }
+
+    .card {
+        @apply bg-white rounded-xl shadow-md transition-all duration-300;
+        @apply hover:shadow-xl hover:-translate-y-1;
+        @apply border border-gray-100;
+    }
+
+    .card-glass {
+        @apply backdrop-blur-lg bg-white/80 rounded-xl shadow-lg;
+        @apply border border-white/20;
+    }
+
+    .gradient-text {
+        @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+    }
+
+    .gradient-border {
+        @apply relative;
+    }
+
+    .gradient-border::before {
+        content: '';
+        @apply absolute inset-0 rounded-xl;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        @apply -z-10 opacity-0 transition-opacity duration-300;
+    }
+
+    .gradient-border:hover::before {
+        @apply opacity-20;
+    }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Shimmer effect for gradient text */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.gradient-shimmer {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #764ba2 75%, #667eea 100%);
+    background-size: 2000px 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 8s linear infinite;
+}
+
+/* Scale pulse animation */
+@keyframes scalePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.animate-scale-pulse {
+    animation: scalePulse 2s ease-in-out infinite;
+}
+
+/* Utility animation classes */
+.animate-fadeIn {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slideInLeft {
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slideInRight {
+    animation: slideInRight 0.6s ease-out;
+}
+
+.animate-pulse-slow {
+    animation: pulse 3s ease-in-out infinite;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Stagger animation delays */
+.stagger-1 {
+    animation-delay: 0.1s;
+}
+
+.stagger-2 {
+    animation-delay: 0.2s;
+}
+
+.stagger-3 {
+    animation-delay: 0.3s;
+}
+
+.stagger-4 {
+    animation-delay: 0.4s;
+}
+
+/* Syntax highlighting for code blocks */
+.hljs {
+    @apply rounded-lg p-4 overflow-x-auto;
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+    @apply flex justify-center my-8;
+}
+
+/* Markdown content styling */
+.markdown-content {
+    @apply prose prose-lg max-w-none;
+    @apply prose-headings:font-bold prose-h1:text-4xl prose-h2:text-3xl;
+    @apply prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline;
+    @apply prose-code:text-accent-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:rounded;
+    @apply prose-pre:bg-gray-900 prose-pre:text-gray-100;
+}
+
+/* Glassmorphism utility */
+.glass {
+    @apply backdrop-blur-md bg-white/70;
+    @apply border border-white/20 shadow-lg;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-accent {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+a,
+input,
+textarea,
+select {
+    @apply transition-all duration-200;
+}
+
+/* Loading spinner */
+.spinner {
+    @apply inline-block w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Progress bar animation */
+@keyframes progressBar {
+    from {
+        width: 0%;
+    }
+}
+
+.progress-bar {
+    animation: progressBar 1.5s ease-out forwards;
+}
+
+/* 3D tilt effect */
+.tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.tilt-card:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
+}
