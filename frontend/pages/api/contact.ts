@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/prisma';
+import { strictRateLimit } from '@/lib/rateLimit';
+import { sendContactNotification } from '@/lib/email';
 
 interface ContactFormData {
     name: string;
@@ -19,6 +21,10 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<{ success: boolean; message: string } | { error: string }>
 ) {
+    // Apply strict rate limiting for contact form
+    const allowed = await strictRateLimit(req, res);
+    if (!allowed) return;
+    
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -37,34 +43,26 @@ export default async function handler(
             return res.status(400).json({ error: 'Invalid email address' });
         }
 
-        // Check if ContactSubmission table exists, if not we'll just return success
-        // In a real implementation, you'd want to add this model to your Prisma schema
-        try {
-            // Store in database (you'll need to add this model to schema.prisma)
-            // const submission = await prisma.contactSubmission.create({
-            //     data: { name, email, message }
-            // });
-
-            // For now, just log it
-            console.log('Contact form submission:', { name, email, message });
-
-            // In production, you would:
-            // 1. Send an email notification
-            // 2. Store in database
-            // 3. Send auto-reply to user
-
-            return res.status(200).json({
-                success: true,
-                message: 'Thank you for your message! I will get back to you soon.'
-            });
-        } catch (dbError) {
-            // If database operation fails, still log and return success
-            console.log('Contact form submission (DB unavailable):', { name, email, message });
-            return res.status(200).json({
-                success: true,
-                message: 'Thank you for your message! I will get back to you soon.'
-            });
+        // Message length validation
+        if (message.length > 5000) {
+            return res.status(400).json({ error: 'Message is too long (max 5000 characters)' });
         }
+
+        // Log the submission
+        console.log('Contact form submission:', { name, email, message: message.substring(0, 100) + '...' });
+
+        // Send email notification
+        const emailResult = await sendContactNotification({ name, email, message });
+        
+        if (!emailResult.success && process.env.RESEND_API_KEY) {
+            // Only fail if email is configured but failed
+            console.error('Failed to send contact notification:', emailResult.error);
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Thank you for your message! I will get back to you soon.'
+        });
     } catch (error) {
         console.error('Error processing contact form:', error);
         return res.status(500).json({ error: 'Internal server error' });

@@ -12,18 +12,38 @@
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Dark mode custom properties */
+.dark {
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* Theme transition */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
+}
+
 /* Smooth scrolling */
 html {
     scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Light mode */
 ::-webkit-scrollbar {
     width: 10px;
 }
 
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #1f2937;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -52,6 +72,7 @@ html {
     .btn-primary {
         @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-xl;
         @apply transform hover:-translate-y-0.5 active:translate-y-0;
+        @apply bg-primary-600 text-white hover:bg-primary-700;
     }
 
     .btn-secondary {
@@ -60,14 +81,14 @@ html {
     }
 
     .card {
-        @apply bg-white rounded-xl shadow-md transition-all duration-300;
+        @apply bg-white dark:bg-gray-800 rounded-xl shadow-md transition-all duration-300;
         @apply hover:shadow-xl hover:-translate-y-1;
-        @apply border border-gray-100;
+        @apply border border-gray-100 dark:border-gray-700;
     }
 
     .card-glass {
-        @apply backdrop-blur-lg bg-white/80 rounded-xl shadow-lg;
-        @apply border border-white/20;
+        @apply backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 rounded-xl shadow-lg;
+        @apply border border-white/20 dark:border-gray-700/50;
     }
 
     .gradient-text {
@@ -87,6 +108,14 @@ html {
 
     .gradient-border:hover::before {
         @apply opacity-20;
+    }
+    
+    /* Input styles for dark mode */
+    .input {
+        @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg;
+        @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-white;
+        @apply focus:outline-none focus:ring-2 focus:ring-primary-500;
+        @apply placeholder-gray-400 dark:placeholder-gray-500;
     }
 }
 
@@ -281,6 +310,20 @@ select {
     }
 }
 
+/* Shimmer animation for skeleton loaders */
+@keyframes shimmer-slide {
+    from {
+        background-position: -200% 0;
+    }
+    to {
+        background-position: 200% 0;
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer-slide 1.5s ease-in-out infinite;
+}
+
 /* Progress bar animation */
 @keyframes progressBar {
     from {
@@ -300,4 +343,82 @@ select {
 
 .tilt-card:hover {
     transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
+}
+
+/* Hero Animations */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.animate-gradient-shift {
+    animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
+}
+
+.animate-blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes scroll-indicator {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(16px);
+    }
+}
+
+.animate-scroll-indicator {
+    animation: scroll-indicator 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce-slow {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.animate-bounce-slow {
+    animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Particle float animation with randomness */
+@keyframes float-particle {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    25% {
+        transform: translateY(-20px) translateX(10px);
+    }
+    50% {
+        transform: translateY(-10px) translateX(-10px);
+    }
+    75% {
+        transform: translateY(-30px) translateX(5px);
+    }
+}
+
+.animate-float {
+    animation: float-particle var(--float-duration, 10s) ease-in-out infinite;
 }

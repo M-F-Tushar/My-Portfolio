@@ -134,7 +134,7 @@ export default function ProjectsManagement() {
                         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title</label>
                                     <input
                                         type="text"
                                         value={formData.title}
@@ -144,7 +144,7 @@ export default function ProjectsManagement() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Slug (URL-friendly)</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Slug (URL-friendly)</label>
                                     <input
                                         type="text"
                                         value={formData.slug}
@@ -158,7 +158,7 @@ export default function ProjectsManagement() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Tech Stack (JSON array)</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tech Stack (JSON array)</label>
                                     <input
                                         type="text"
                                         value={formData.techStack}
@@ -171,7 +171,7 @@ export default function ProjectsManagement() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Description (Short summary)</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (Short summary)</label>
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -182,7 +182,7 @@ export default function ProjectsManagement() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Content (Markdown - detailed project description)</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Content (Markdown - detailed project description)</label>
                                 <textarea
                                     value={formData.content}
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
@@ -195,7 +195,7 @@ export default function ProjectsManagement() {
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Image URL</label>
                                     <input
                                         type="text"
                                         value={formData.imageUrl}
@@ -205,7 +205,7 @@ export default function ProjectsManagement() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Demo URL</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Demo URL</label>
                                     <input
                                         type="text"
                                         value={formData.demoUrl}
@@ -215,7 +215,7 @@ export default function ProjectsManagement() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Repo URL</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Repo URL</label>
                                     <input
                                         type="text"
                                         value={formData.repoUrl}
@@ -233,7 +233,7 @@ export default function ProjectsManagement() {
                                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                                     className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                                 />
-                                <label className="ml-2 text-sm font-medium text-gray-700">Featured Project</label>
+                                <label className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Featured Project</label>
                             </div>
 
                             <div className="flex justify-end space-x-3 pt-4">
@@ -263,7 +263,7 @@ export default function ProjectsManagement() {
                                         <p className="text-gray-600 mt-2">{project.description}</p>
                                         <div className="mt-3 flex flex-wrap gap-2">
                                             {JSON.parse(project.techStack || '[]').map((tech: string, idx: number) => (
-                                                <span key={idx} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                                                <span key={idx} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-full">
                                                     {tech}
                                                 </span>
                                             ))}

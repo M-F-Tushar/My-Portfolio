@@ -1,7 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { securityConfig } from './config';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = securityConfig.jwtSecret;
 const JWT_EXPIRES_IN = '7d';
 
 export interface JWTPayload {
@@ -9,6 +10,11 @@ export interface JWTPayload {
     username: string;
     email: string;
     role: string;
+}
+
+// Warn in production if using default secret
+if (process.env.NODE_ENV === 'production' && JWT_SECRET.includes('change-in-production')) {
+    console.error('⚠️  CRITICAL: Using default JWT_SECRET in production is a security risk!');
 }
 
 /**

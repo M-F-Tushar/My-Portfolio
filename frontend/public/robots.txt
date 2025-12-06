@@ -1,9 +1,21 @@
+# NOTICE: This file is now dynamically generated.
+# The actual robots.txt is served from /api/robots.txt
+# This static file is kept as a fallback.
+#
+# Configure your domain in .env.local:
+# NEXT_PUBLIC_SITE_URL=https://your-domain.com
+
 User-agent: *
 Allow: /
 
 # Disallow admin pages
 Disallow: /admin
+Disallow: /admin/*
 Disallow: /api/
 
-# Sitemap
-Sitemap: https://yourportfolio.com/sitemap.xml
+# Allow SEO endpoints
+Allow: /api/sitemap.xml
+Allow: /api/robots.txt
+
+# Sitemap (will be redirected to dynamic version)
+Sitemap: /api/sitemap.xml

@@ -66,7 +66,7 @@ export default function ProjectDetail({ project }: ProjectProps) {
                                     href={project.repoUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 text-gray-600 hover:text-gray-700"
+                                    className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                                 >
                                     <Github className="w-4 h-4" />
                                     View Code

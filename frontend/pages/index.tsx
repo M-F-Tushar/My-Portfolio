@@ -189,7 +189,7 @@ export default function Home({ profile, socialLinks, skills, experiences, projec
                         </div>
 
                         <div className="space-y-4">
-                            <div className="text-lg text-gray-700 whitespace-pre-line">
+                            <div className="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-line">
                                 {profile.summary}
                             </div>
 
@@ -261,7 +261,7 @@ export default function Home({ profile, socialLinks, skills, experiences, projec
                             <h3 className="text-xl font-semibold mb-4">Deployment</h3>
                             <div className="flex flex-wrap gap-2">
                                 {skillsByCategory['Deployment']?.map(skill => (
-                                    <span key={skill} className="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition-colors cursor-default">
+                                    <span key={skill} className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-default">
                                         {skill}
                                     </span>
                                 ))}
@@ -291,7 +291,7 @@ export default function Home({ profile, socialLinks, skills, experiences, projec
                                         </div>
                                         <span className="text-gray-500">{exp.period}</span>
                                     </div>
-                                    <ul className="space-y-2 text-gray-700">
+                                    <ul className="space-y-2 text-gray-700 dark:text-gray-300">
                                         {achievements.map((item, i) => (
                                             <li key={i}>• {item}</li>
                                         ))}

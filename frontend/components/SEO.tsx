@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { siteConfig, getFullUrl, getImageUrl } from '@/lib/config';
 
 interface SEOProps {
     title?: string;
@@ -10,22 +11,26 @@ interface SEOProps {
     keywords?: string[];
     publishedTime?: string;
     modifiedTime?: string;
+    noIndex?: boolean;
 }
 
+export type { SEOProps };
+
 export default function SEO({
-    title = 'AI/ML Portfolio',
-    description = 'Professional AI/ML Engineer Portfolio showcasing expertise in Large Language Models, Deep Learning, and Production ML Systems',
-    image = '/og-image.png',
-    url = 'https://yourportfolio.com',
+    title = siteConfig.name,
+    description = siteConfig.defaultDescription,
+    image = siteConfig.defaultImage,
+    url = '',
     type = 'website',
-    author = 'AI/ML Engineer',
-    keywords = ['AI', 'ML', 'Machine Learning', 'Deep Learning', 'LLM', 'Portfolio', 'Data Science'],
+    author = siteConfig.author,
+    keywords = siteConfig.defaultKeywords,
     publishedTime,
     modifiedTime,
+    noIndex = false,
 }: SEOProps) {
-    const fullTitle = title.includes('Portfolio') ? title : `${title} | AI/ML Portfolio`;
-    const fullUrl = url.startsWith('http') ? url : `https://yourportfolio.com${url}`;
-    const fullImage = image.startsWith('http') ? image : `https://yourportfolio.com${image}`;
+    const fullTitle = title.includes('Portfolio') ? title : `${title} | ${siteConfig.name}`;
+    const fullUrl = url.startsWith('http') ? url : getFullUrl(url);
+    const fullImage = getImageUrl(image);
 
     // Structured Data (JSON-LD) for Person/Professional
     const structuredData = {
@@ -53,7 +58,7 @@ export default function SEO({
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
             <meta name="language" content="English" />
-            <meta name="robots" content="index, follow" />
+            <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
             <meta name="googlebot" content="index, follow" />
 
             {/* Canonical URL */}
@@ -79,10 +84,12 @@ export default function SEO({
             <meta name="twitter:title" content={fullTitle} />
             <meta name="twitter:description" content={description} />
             <meta name="twitter:image" content={fullImage} />
-            <meta name="twitter:creator" content="@yourusername" />
+            {siteConfig.twitterHandle && (
+                <meta name="twitter:creator" content={`@${siteConfig.twitterHandle}`} />
+            )}
 
             {/* Additional Meta Tags */}
-            <meta name="theme-color" content="#667eea" />
+            <meta name="theme-color" content={siteConfig.themeColor} />
             <meta name="msapplication-TileColor" content="#667eea" />
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

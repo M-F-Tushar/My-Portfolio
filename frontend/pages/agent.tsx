@@ -112,7 +112,7 @@ export default function AgentPlayground() {
 
                     {/* Task Input */}
                     <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Task Description
                         </label>
                         <textarea
@@ -191,11 +191,11 @@ export default function AgentPlayground() {
                                                 <span className="text-sm font-medium text-gray-500">
                                                     Step {step.step}
                                                 </span>
-                                                <span className="text-sm font-semibold text-gray-900">
+                                                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                                                     {step.action}
                                                 </span>
                                             </div>
-                                            <p className="text-sm text-gray-700">{step.result}</p>
+                                            <p className="text-sm text-gray-700 dark:text-gray-300">{step.result}</p>
                                         </div>
                                     </div>
                                 ))}

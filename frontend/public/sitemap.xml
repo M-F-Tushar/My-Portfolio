@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  NOTICE: This file is now dynamically generated.
+  The actual sitemap is served from /api/sitemap.xml
+  This static file is kept as a fallback.
+  
+  Configure your domain in .env.local:
+  NEXT_PUBLIC_SITE_URL=https://your-domain.com
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://yourportfolio.com/</loc>
-    <lastmod>2025-11-29</lastmod>
+    <loc>/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://yourportfolio.com/chat</loc>
-    <lastmod>2025-11-29</lastmod>
+    <loc>/chat</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://yourportfolio.com/agent</loc>
-    <lastmod>2025-11-29</lastmod>
+    <loc>/agent</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

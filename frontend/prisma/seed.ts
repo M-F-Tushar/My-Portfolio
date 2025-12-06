@@ -81,6 +81,7 @@ async function main() {
     await prisma.project.create({
         data: {
             title: "LLM-Powered Chatbot",
+            slug: "llm-powered-chatbot",
             description: "Production chatbot using GPT-4 with RAG for domain-specific knowledge. Handles 10K+ conversations/day.",
             techStack: JSON.stringify(['OpenAI', 'LangChain', 'FAISS']),
             demoUrl: "#",
@@ -92,6 +93,7 @@ async function main() {
     await prisma.project.create({
         data: {
             title: "Computer Vision Pipeline",
+            slug: "computer-vision-pipeline",
             description: "Real-time object detection system using YOLOv8. Deployed on edge devices with 30 FPS performance.",
             techStack: JSON.stringify(['PyTorch', 'YOLO', 'OpenCV']),
             demoUrl: "#",
@@ -103,6 +105,7 @@ async function main() {
     await prisma.project.create({
         data: {
             title: "ML Model Monitoring Dashboard",
+            slug: "ml-model-monitoring-dashboard",
             description: "Real-time monitoring for ML models in production. Tracks drift, performance, and data quality.",
             techStack: JSON.stringify(['MLflow', 'FastAPI', 'React']),
             demoUrl: "#",

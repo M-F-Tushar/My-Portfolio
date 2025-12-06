@@ -19,6 +19,7 @@ module.exports = {
                     700: '#0369a1',
                     800: '#075985',
                     900: '#0c4a6e',
+                    950: '#082f49',
                 },
                 accent: {
                     50: '#fdf4ff',
@@ -31,11 +32,31 @@ module.exports = {
                     700: '#a21caf',
                     800: '#86198f',
                     900: '#701a75',
+                    950: '#4a044e',
                 },
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
                 mono: ['Fira Code', 'monospace'],
+            },
+            animation: {
+                'shimmer': 'shimmer-slide 1.5s ease-in-out infinite',
+                'fade-in': 'fadeIn 0.6s ease-out',
+                'slide-up': 'slideUp 0.6s ease-out',
+            },
+            keyframes: {
+                'shimmer-slide': {
+                    'from': { backgroundPosition: '-200% 0' },
+                    'to': { backgroundPosition: '200% 0' },
+                },
+                fadeIn: {
+                    'from': { opacity: '0', transform: 'translateY(20px)' },
+                    'to': { opacity: '1', transform: 'translateY(0)' },
+                },
+                slideUp: {
+                    'from': { opacity: '0', transform: 'translateY(40px)' },
+                    'to': { opacity: '1', transform: 'translateY(0)' },
+                },
             },
             typography: (theme) => ({
                 DEFAULT: {
@@ -60,6 +81,27 @@ module.exports = {
                         },
                         'code::after': {
                             content: '""',
+                        },
+                    },
+                },
+                dark: {
+                    css: {
+                        color: theme('colors.gray.300'),
+                        a: {
+                            color: theme('colors.primary.400'),
+                            '&:hover': {
+                                color: theme('colors.primary.300'),
+                            },
+                        },
+                        code: {
+                            color: theme('colors.accent.400'),
+                            backgroundColor: theme('colors.gray.800'),
+                        },
+                        'strong': {
+                            color: theme('colors.gray.100'),
+                        },
+                        'h1, h2, h3, h4, h5, h6': {
+                            color: theme('colors.gray.200'),
                         },
                     },
                 },
