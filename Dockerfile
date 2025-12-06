@@ -1,7 +1,7 @@
 # Multi-stage build for AI Portfolio
 
 # Stage 1: Backend
-FROM python:3.11-slim as backend
+FROM python:3.14-slim as backend
 
 WORKDIR /app/backend
 
