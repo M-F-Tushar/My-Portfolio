@@ -1,23 +1,24 @@
 {
-    "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "frontend/package.json",
-            "use": "@vercel/next"
+            "source": "/api/query",
+            "destination": "/api/query"
         },
         {
-            "src": "backend/main.py",
-            "use": "@vercel/python"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(query|agent|health|docs|openapi.json)",
-            "dest": "backend/main.py"
+            "source": "/api/agent",
+            "destination": "/api/agent"
         },
         {
-            "src": "/(.*)",
-            "dest": "frontend/$1"
+            "source": "/api/health",
+            "destination": "/api/health"
+        },
+        {
+            "source": "/api/docs",
+            "destination": "/api/docs"
+        },
+        {
+            "source": "/api/openapi.json",
+            "destination": "/api/openapi.json"
         }
     ]
 }
