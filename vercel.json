@@ -19,9 +19,5 @@
             "src": "/(.*)",
             "dest": "frontend/$1"
         }
-    ],
-    "env": {
-        "LLM_PROVIDER": "@llm_provider",
-        "OPENROUTER_API_KEY": "@openrouter_api_key"
-    }
+    ]
 }
