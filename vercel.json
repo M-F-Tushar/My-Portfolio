@@ -12,7 +12,7 @@
     ],
     "routes": [
         {
-            "src": "/api/(.*)",
+            "src": "/api/(query|agent|health|docs|openapi.json)",
             "dest": "backend/main.py"
         },
         {
