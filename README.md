@@ -1,31 +1,40 @@
-# Professional AI/ML Portfolio
+# 🚀 Professional AI/ML Portfolio
 
-A high-performance, dynamic portfolio website built for AI/ML Engineers. This project showcases a modern, responsive design with professional animations, a comprehensive admin dashboard, and a robust tech stack.
+A high-performance, intelligent portfolio website built for AI/ML Engineers. This project combines a modern, responsive design with a powerful backend for agentic capabilities, content management, and robust security.
 
-![Portfolio Hero Section](https://github.com/M-F-Tushar/My-Portfolio/raw/main/frontend/public/og-image.png)
+![Portfolio Banner](frontend/public/og-image.png)
 
-## 🚀 Features
+## ✨ key Features
 
--   **Dynamic Content:** All data (Profile, Projects, Experience, Skills) is managed via a database.
--   **Admin Dashboard:** Secure admin panel to update portfolio content without code changes.
--   **Professional UI/UX:**
-    -   Gradient shimmer effects & glassmorphism
-    -   3D tilt interactions on project cards
-    -   Smooth scroll & entrance animations
-    -   Responsive design for all devices
--   **Tech Stack:**
-    -   **Frontend:** Next.js (React), Tailwind CSS, Framer Motion (via CSS)
-    -   **Backend:** FastAPI (Python)
-    -   **Database:** SQLite (Dev) / PostgreSQL (Prod) with Prisma ORM
-    -   **Authentication:** JWT-based auth for admin panel
+*   **🤖 AI Agent Backend**: Integrated FastAPI backend for RAG (Retrieval Augmented Generation) and agentic workflows.
+*   **📊 Dynamic Content Management**: Admin dashboard to manage Projects, Experience, Skills, and Blog posts without code changes.
+*   **🛡️ Enterprise-Grade Security**:
+    *   **Rate Limiting**: Redis-based sliding window rate limiting on all API routes.
+    *   **Authentication**: Secure JWT-based admin authentication.
+    *   **Protection**: CSRF protection, secure headers, and SQL injection prevention.
+*   **⚡ High Performance**:
+    *   **Next.js 14**: Server-Side Rendering (SSR) and Edge Middleware.
+    *   **PostgreSQL**: Production-grade relational database (via Supabase).
+    *   **Redis**: High-speed caching and rate limiting (via Upstash).
+*   **🎨 Professional UI/UX**: glassmorphism design, 3D tilt effects, and Framer Motion animations.
 
-## 🛠️ Installation & Setup
+## 🛠️ Tech Stack
+
+*   **Frontend**: Next.js 14 (TypeScript), Tailwind CSS, Framer Motion
+*   **Backend**: FastAPI (Python), LangChain (AI Agent)
+*   **Database**: PostgreSQL (Supabase) + Prisma ORM
+*   **Cache/Rate Limiting**: Upstash Redis
+*   **Deployment**: Vercel (Frontend & Backend serverless)
+
+## 🚀 Quick Start (Local Development)
 
 ### Prerequisites
--   Node.js (v18+)
--   Python (v3.9+)
+*   Node.js 18+
+*   Python 3.11+
+*   PostgreSQL Database (Supabase recommended)
+*   Redis (Upstash recommended)
 
-### 1. Clone the Repository
+### 1. Clone & Setup
 ```bash
 git clone https://github.com/M-F-Tushar/My-Portfolio.git
 cd My-Portfolio
@@ -35,9 +44,15 @@ cd My-Portfolio
 ```bash
 cd frontend
 npm install
-# Create .env file
+
+# Setup Environment Variables
 cp .env.example .env
-# Run development server
+# Edit .env and add your DATABASE_URL, UPSTASH_REDIS_REST_URL, etc.
+
+# Run Database Migrations
+npx prisma migrate dev
+
+# Start Dev Server
 npm run dev
 ```
 
@@ -45,34 +60,28 @@ npm run dev
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
 pip install -r requirements.txt
-# Run FastAPI server
 uvicorn main:app --reload
 ```
 
-## 📂 Project Structure
+## 🌍 Deployment (Vercel)
 
-```
-My-Portfolio/
-├── frontend/          # Next.js application
-│   ├── pages/         # Routes & Views
-│   ├── components/    # Reusable UI components
-│   ├── styles/        # Global styles & Tailwind config
-│   └── prisma/        # Database schema & migrations
-└── backend/           # FastAPI application (optional/if used)
-```
+This project is optimized for deployment on **Vercel**.
 
-## 🎨 Customization
+1.  **Push** your code to GitHub.
+2.  **Import** the project in [Vercel](https://vercel.com).
+    *   **Root Directory**: Select `frontend`.
+    *   **Framework**: Next.js.
+3.  **Environment Variables**: Copy all variables from your `frontend/.env` to Vercel.
+4.  **Deploy**!
 
-You can customize the look and feel by editing:
--   `frontend/styles/globals.css`: Global variables for colors and animations.
--   `frontend/tailwind.config.js`: Tailwind theme configuration.
+> **Note**: This is a hybrid deployment. Vercel automatically handles the Next.js frontend and compiles the `backend/` folder into Serverless Python Functions.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🔒 Security
-
-For security concerns, please review our [Security Policy](SECURITY.md).
+MIT License - feel free to use this as a template for your own portfolio!
