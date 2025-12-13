@@ -50,8 +50,8 @@ const nextConfig = {
                             // Note: Next.js requires 'unsafe-inline' for inline scripts during hydration
                             // In production, consider using nonces via middleware for stricter CSP
                             process.env.NODE_ENV === 'development'
-                                ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
-                                : "script-src 'self' 'unsafe-inline'",
+                                ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:"
+                                : "script-src 'self' 'unsafe-inline' blob:",
                             // Tailwind CSS requires 'unsafe-inline' for styles
                             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                             "font-src 'self' https://fonts.gstatic.com data:",
