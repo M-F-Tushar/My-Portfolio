@@ -56,7 +56,7 @@ const nextConfig = {
                             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                             "font-src 'self' https://fonts.gstatic.com data:",
                             "img-src 'self' data: https: blob:",
-                            "connect-src 'self' https://*.vercel.app https://*.supabase.co wss://*.supabase.co https://*.upstash.io http://localhost:*",
+                            "connect-src 'self' https://*.vercel.app https://*.supabase.co wss://*.supabase.co https://*.upstash.io https://www.google-analytics.com http://localhost:*",
                             "frame-ancestors 'none'",
                             "base-uri 'self'",
                             "form-action 'self'",
