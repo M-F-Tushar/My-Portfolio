@@ -18,6 +18,7 @@ export interface HomeProps {
     projects: Project[];
     education: Education[];
     certifications: Certification[];
+    error?: string;
 }
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res }) => {
@@ -61,14 +62,26 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
                 projects: [],
                 education: [],
                 certifications: [],
+                error: error instanceof Error ? error.message : String(error), // Pass error to frontend
             },
         };
     }
 };
 
-export default function Home({ profile, socialLinks, skills, experiences, projects, education, certifications }: HomeProps) {
+export default function Home({ profile, error }: HomeProps) {
+    if (error) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center p-4">
+                <h1 className="text-red-500 text-xl font-bold mb-4">Database Connection Error</h1>
+                <pre className="bg-gray-900 text-white p-4 rounded overflow-auto max-w-2xl">
+                    {error}
+                </pre>
+            </div>
+        );
+    }
+
     if (!profile) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+        return <div className="min-h-screen flex items-center justify-center">Loading (Profile not found)...</div>;
     }
 
     return (
