@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { ratelimit } from "@/lib/ratelimit";
+import { ratelimit } from "./lib/ratelimit";
 
 export async function middleware(req: NextRequest) {
     if (req.nextUrl.pathname.startsWith("/api/")) {
