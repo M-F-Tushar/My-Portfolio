@@ -1,4 +1,4 @@
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import prisma from '../lib/prisma';
 import { Profile, SocialLink, Skill, Experience, Project, Education, Certification } from '@prisma/client';
@@ -20,7 +20,13 @@ export interface HomeProps {
     certifications: Certification[];
 }
 
-export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res }) => {
+    // Cache the response for 60 seconds at the edge, and revalidate in the background
+    res.setHeader(
+        'Cache-Control',
+        'public, s-maxage=60, stale-while-revalidate=59'
+    );
+
     try {
         const profile = await prisma.profile.findFirst();
         const socialLinks = await prisma.socialLink.findMany();
@@ -43,7 +49,6 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
                 education: serialize(education),
                 certifications: serialize(certifications),
             },
-            revalidate: 60, // ISR: regenerate page every 60 seconds
         };
     } catch (error) {
         console.error('Error fetching initial props:', error);
