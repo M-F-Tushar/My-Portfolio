@@ -22,13 +22,37 @@ export interface HomeProps {
 }
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res }) => {
-    // Cache the response for 60 seconds at the edge, and revalidate in the background
     res.setHeader(
         'Cache-Control',
         'public, s-maxage=60, stale-while-revalidate=59'
     );
 
     try {
+        // MOCK DATA MODE - To verify if DB connection is the cause of 500s
+        const profile = {
+            id: 1,
+            name: "M-F-Tushar",
+            title: "AI Engineer (Mock)",
+            bio: "Mock Bio for Debugging",
+            summary: "Mock Summary",
+            email: "test@example.com",
+            location: "Earth",
+            resumeUrl: "",
+            avatarUrl: "",
+            aboutImage: "",
+            yearsOfExperience: "5",
+            modelsDeployed: "10",
+            createdAt: new Date(), // serialized below
+            updatedAt: new Date(),
+        };
+        const socialLinks = [];
+        const skills = [];
+        const experiences = [];
+        const projects = [];
+        const education = [];
+        const certifications = [];
+
+        /*
         const profile = await prisma.profile.findFirst();
         const socialLinks = await prisma.socialLink.findMany();
         const skills = await prisma.skill.findMany();
@@ -36,6 +60,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
         const projects = await prisma.project.findMany({ orderBy: { featured: 'desc' } });
         const education = await prisma.education.findMany({ orderBy: { id: 'desc' } });
         const certifications = await prisma.certification.findMany();
+        */
 
         // Helper to serialize dates
         const serialize = <T extends any>(data: T): T => JSON.parse(JSON.stringify(data));
@@ -62,7 +87,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
                 projects: [],
                 education: [],
                 certifications: [],
-                error: error instanceof Error ? error.message : String(error), // Pass error to frontend
+                error: error instanceof Error ? error.message : String(error),
             },
         };
     }
