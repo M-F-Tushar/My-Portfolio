@@ -45,12 +45,12 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
             createdAt: new Date(), // serialized below
             updatedAt: new Date(),
         };
-        const socialLinks = [];
-        const skills = [];
-        const experiences = [];
-        const projects = [];
-        const education = [];
-        const certifications = [];
+        const socialLinks: SocialLink[] = [];
+        const skills: Skill[] = [];
+        const experiences: Experience[] = [];
+        const projects: Project[] = [];
+        const education: Education[] = [];
+        const certifications: Certification[] = [];
 
         /*
         const profile = await prisma.profile.findFirst();
