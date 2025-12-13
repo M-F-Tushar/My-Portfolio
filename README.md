@@ -4,7 +4,7 @@ A high-performance, intelligent portfolio website built for AI/ML Engineers. Thi
 
 ![Portfolio Banner](frontend/public/og-image.png)
 
-## ✨ key Features
+## ✨ Key Features
 
 *   **🤖 AI Agent Backend**: Integrated FastAPI backend for RAG (Retrieval Augmented Generation) and agentic workflows.
 *   **📊 Dynamic Content Management**: Admin dashboard to manage Projects, Experience, Skills, and Blog posts without code changes.
@@ -16,7 +16,7 @@ A high-performance, intelligent portfolio website built for AI/ML Engineers. Thi
     *   **Next.js 14**: Server-Side Rendering (SSR) and Edge Middleware.
     *   **PostgreSQL**: Production-grade relational database (via Supabase).
     *   **Redis**: High-speed caching and rate limiting (via Upstash).
-*   **🎨 Professional UI/UX**: glassmorphism design, 3D tilt effects, and Framer Motion animations.
+*   **🎨 Professional UI/UX**: Glassmorphism design, 3D tilt effects, and Framer Motion animations.
 
 ## 🛠️ Tech Stack
 
@@ -75,7 +75,7 @@ This project is optimized for deployment on **Vercel**.
 
 1.  **Push** your code to GitHub.
 2.  **Import** the project in [Vercel](https://vercel.com).
-    *   **Root Directory**: Select `frontend`.
+    *   **Root Directory**: Select `.` (Project Root).
     *   **Framework**: Next.js.
 3.  **Environment Variables**: Copy all variables from your `frontend/.env` to Vercel.
 4.  **Deploy**!
