@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res })
     }
 };
 
-export default function Home({ profile, error }: HomeProps) {
+export default function Home({ profile, socialLinks, skills, experiences, projects, education, certifications, error }: HomeProps) {
     if (error) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-4">
