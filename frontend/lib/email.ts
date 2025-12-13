@@ -27,12 +27,12 @@ interface SendEmailResult {
  */
 export async function sendEmail(options: EmailOptions): Promise<SendEmailResult> {
     const apiKey = process.env.RESEND_API_KEY;
-    
+
     if (!apiKey) {
         console.warn('RESEND_API_KEY not configured. Email not sent.');
-        return { 
-            success: false, 
-            error: 'Email service not configured' 
+        return {
+            success: false,
+            error: 'Email service not configured'
         };
     }
 
@@ -59,15 +59,15 @@ export async function sendEmail(options: EmailOptions): Promise<SendEmailResult>
         }
 
         const data = await response.json();
-        return { 
-            success: true, 
-            messageId: data.id 
+        return {
+            success: true,
+            messageId: data.id
         };
     } catch (error) {
         console.error('Email send error:', error);
-        return { 
-            success: false, 
-            error: error instanceof Error ? error.message : 'Unknown error' 
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
         };
     }
 }
@@ -82,7 +82,7 @@ export async function sendContactNotification(data: {
 }): Promise<SendEmailResult> {
     const toEmail = process.env.CONTACT_EMAIL || process.env.ADMIN_EMAIL;
     const fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
-    
+
     if (!toEmail) {
         console.warn('CONTACT_EMAIL not configured. Using fallback logging.');
         return { success: true, messageId: 'logged-only' };
@@ -167,4 +167,5 @@ function escapeHtml(text: string): string {
     return text.replace(/[&<>"']/g, (char) => map[char]);
 }
 
-export default { sendEmail, sendContactNotification };
+const emailService = { sendEmail, sendContactNotification };
+export default emailService;

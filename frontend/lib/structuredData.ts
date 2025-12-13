@@ -162,7 +162,7 @@ export function combineSchemas(...schemas: object[]): string {
     return JSON.stringify(schemas);
 }
 
-export default {
+const structuredDataUtils = {
     generatePersonSchema,
     generateArticleSchema,
     generateBreadcrumbSchema,
@@ -170,3 +170,5 @@ export default {
     generateWebSiteSchema,
     combineSchemas,
 };
+
+export default structuredDataUtils;

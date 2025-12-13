@@ -20,7 +20,7 @@ const RELEASE = process.env.npm_package_version || '1.0.0';
 
 // Check if Sentry should be initialized
 const shouldInitialize = Boolean(
-    SENTRY_DSN && 
+    SENTRY_DSN &&
     (ENVIRONMENT === 'production' || process.env.ENABLE_SENTRY === 'true')
 );
 
@@ -38,7 +38,6 @@ let SentryModule: {
 // Try to load Sentry dynamically
 if (shouldInitialize && typeof window !== 'undefined') {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
         SentryModule = require('@sentry/nextjs');
     } catch {
         console.warn('Sentry SDK not installed. Run: npm install @sentry/nextjs');
@@ -86,7 +85,6 @@ export function initSentryServer(): void {
     }
 
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const ServerSentry = require('@sentry/nextjs');
         ServerSentry.init({
             dsn: SENTRY_DSN,
@@ -165,7 +163,7 @@ export function startTransaction(name: string, op: string): { finish: () => void
     return SentryModule.startTransaction({ name, op });
 }
 
-export default {
+const sentryUtils = {
     initSentryClient,
     initSentryServer,
     captureError,
@@ -174,3 +172,5 @@ export default {
     addBreadcrumb,
     startTransaction,
 };
+
+export default sentryUtils;

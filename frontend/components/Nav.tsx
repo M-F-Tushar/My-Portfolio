@@ -17,7 +17,7 @@ export default function Nav() {
     const [profileName, setProfileName] = useState('Portfolio');
     const [scrolled, setScrolled] = useState(false);
     const [navItems, setNavItems] = useState<Array<{ label: string; href: string }>>([]);
-    
+
     // Track active section for navigation highlighting
     const sectionIds = navItems
         .filter(item => item.href.startsWith('#'))
@@ -56,7 +56,7 @@ export default function Nav() {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [mounted]);
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         e.preventDefault();
@@ -97,23 +97,21 @@ export default function Nav() {
                         {navItems.map((item) => {
                             const sectionId = item.href.startsWith('#') ? item.href.slice(1) : '';
                             const isActive = sectionId === activeSection;
-                            
+
                             return (
                                 <a
                                     key={item.label}
                                     href={item.href}
                                     onClick={(e) => handleClick(e, item.href)}
-                                    className={`relative py-1 transition-colors font-medium ${
-                                        isActive 
-                                            ? 'text-primary-600 dark:text-primary-400' 
+                                    className={`relative py-1 transition-colors font-medium ${isActive
+                                            ? 'text-primary-600 dark:text-primary-400'
                                             : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
-                                    }`}
+                                        }`}
                                 >
                                     {item.label}
                                     {/* Active indicator */}
-                                    <span className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary-600 dark:bg-primary-400 transform transition-transform origin-left ${
-                                        isActive ? 'scale-x-100' : 'scale-x-0'
-                                    }`} />
+                                    <span className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary-600 dark:bg-primary-400 transform transition-transform origin-left ${isActive ? 'scale-x-100' : 'scale-x-0'
+                                        }`} />
                                 </a>
                             );
                         })}
@@ -126,10 +124,10 @@ export default function Nav() {
                                 <span>Admin</span>
                             </Link>
                         )}
-                        
+
                         {/* Theme Toggle */}
                         <ThemeToggle />
-                        
+
                         <a
                             href="/resume.pdf"
                             className="btn-primary text-sm"
@@ -155,17 +153,16 @@ export default function Nav() {
                         {navItems.map((item) => {
                             const sectionId = item.href.startsWith('#') ? item.href.slice(1) : '';
                             const isActive = sectionId === activeSection;
-                            
+
                             return (
                                 <a
                                     key={item.label}
                                     href={item.href}
                                     onClick={(e) => handleClick(e, item.href)}
-                                    className={`block transition-colors font-medium py-2 ${
-                                        isActive 
-                                            ? 'text-primary-600 dark:text-primary-400 border-l-2 border-primary-600 pl-3' 
+                                    className={`block transition-colors font-medium py-2 ${isActive
+                                            ? 'text-primary-600 dark:text-primary-400 border-l-2 border-primary-600 pl-3'
                                             : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
-                                    }`}
+                                        }`}
                                 >
                                     {item.label}
                                 </a>
@@ -180,12 +177,12 @@ export default function Nav() {
                                 <span>Admin</span>
                             </Link>
                         )}
-                        
+
                         <div className="flex items-center justify-between py-2 border-t dark:border-gray-800">
                             <span className="text-gray-600 dark:text-gray-400">Theme</span>
                             <ThemeToggle />
                         </div>
-                        
+
                         <a
                             href="/resume.pdf"
                             className="block btn-primary text-center"

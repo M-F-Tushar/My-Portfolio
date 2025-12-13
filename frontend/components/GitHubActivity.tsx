@@ -3,6 +3,7 @@
  * Displays recent GitHub activity and repository stats
  */
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface Repository {
     id: number;
@@ -72,22 +73,22 @@ export function GitHubActivity({
                 const userResponse = await fetch(
                     `https://api.github.com/users/${username}`
                 );
-                
+
                 if (!userResponse.ok) {
                     throw new Error('Failed to fetch GitHub profile');
                 }
-                
+
                 const userData = await userResponse.json();
 
                 // Fetch repositories
                 const reposResponse = await fetch(
                     `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`
                 );
-                
+
                 if (!reposResponse.ok) {
                     throw new Error('Failed to fetch repositories');
                 }
-                
+
                 const reposData: Repository[] = await reposResponse.json();
 
                 // Calculate total stars
@@ -264,7 +265,7 @@ function RepoCard({ repo }: { repo: Repository }) {
                     {repo.stargazers_count}
                 </div>
             </div>
-            
+
             <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3 min-h-[40px]">
                 {repo.description || 'No description available'}
             </p>
@@ -281,7 +282,7 @@ function RepoCard({ repo }: { repo: Repository }) {
                         </span>
                     </div>
                 )}
-                
+
                 {repo.forks_count > 0 && (
                     <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
@@ -321,10 +322,13 @@ export function GitHubContributions({
 }) {
     return (
         <div className={`${className} text-center`}>
-            <img
+            <Image
                 src={`https://ghchart.rshah.org/${username}`}
                 alt={`${username}'s GitHub Contribution Chart`}
+                width={896}
+                height={128}
                 className="w-full max-w-3xl mx-auto dark:invert dark:hue-rotate-180"
+                unoptimized
             />
         </div>
     );

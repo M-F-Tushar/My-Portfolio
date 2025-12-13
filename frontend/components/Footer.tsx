@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Github, Linkedin, Mail, Twitter, ExternalLink } from 'lucide-react';
+import { Mail } from 'lucide-react';
+import SocialIcon from './SocialIcon';
 
 interface FooterData {
     profile: {
         name: string;
         email: string;
+        // ... (other fields remain)
     } | null;
     socialLinks: Array<{
         id: number;
@@ -31,16 +33,6 @@ export default function Footer() {
                 setLoading(false);
             });
     }, []);
-
-    const getIcon = (iconName: string) => {
-        switch (iconName) {
-            case 'Github': return <Github className="w-6 h-6" />;
-            case 'Linkedin': return <Linkedin className="w-6 h-6" />;
-            case 'Mail': return <Mail className="w-6 h-6" />;
-            case 'Twitter': return <Twitter className="w-6 h-6" />;
-            default: return <ExternalLink className="w-6 h-6" />;
-        }
-    };
 
     // Fallback values while loading or if data fetch fails
     const profileName = footerData?.profile?.name || 'AI/ML Engineer';
@@ -107,7 +99,7 @@ export default function Footer() {
                                         className="hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"
                                         aria-label={link.platform}
                                     >
-                                        {getIcon(link.icon)}
+                                        <SocialIcon platform={link.icon} className="w-6 h-6" />
                                     </a>
                                 ))}
                             </div>

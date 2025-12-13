@@ -3,9 +3,11 @@ const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
     eslint: {
-        ignoreDuringBuilds: true,
+        // Lint during builds to catch security and code quality issues
+        ignoreDuringBuilds: false,
+        dirs: ['pages', 'components', 'lib', 'hooks'],
     },
-    
+
     // Security Headers
     async headers() {
         return [
@@ -45,19 +47,27 @@ const nextConfig = {
                         key: 'Content-Security-Policy',
                         value: [
                             "default-src 'self'",
-                            "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+                            // Note: Next.js requires 'unsafe-inline' for inline scripts during hydration
+                            // In production, consider using nonces via middleware for stricter CSP
+                            process.env.NODE_ENV === 'development'
+                                ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
+                                : "script-src 'self' 'unsafe-inline'",
+                            // Tailwind CSS requires 'unsafe-inline' for styles
                             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-                            "font-src 'self' https://fonts.gstatic.com",
+                            "font-src 'self' https://fonts.gstatic.com data:",
                             "img-src 'self' data: https: blob:",
-                            "connect-src 'self' https://*.vercel.app http://localhost:*",
+                            "connect-src 'self' https://*.vercel.app https://*.supabase.co wss://*.supabase.co http://localhost:*",
                             "frame-ancestors 'none'",
+                            "base-uri 'self'",
+                            "form-action 'self'",
+                            "upgrade-insecure-requests",
                         ].join('; ')
                     }
                 ],
             },
         ];
     },
-    
+
     async rewrites() {
         return [
             {
@@ -70,7 +80,7 @@ const nextConfig = {
             },
         ];
     },
-    
+
     // Image optimization configuration
     images: {
         domains: ['localhost'],
@@ -88,7 +98,7 @@ const nextConfig = {
         // Minimize layout shift
         minimumCacheTTL: 60,
     },
-    
+
     webpack: (config) => {
         config.resolve.fallback = { fs: false, path: false };
         return config;

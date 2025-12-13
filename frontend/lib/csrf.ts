@@ -35,20 +35,20 @@ function signToken(token: string): string {
 function verifySignedToken(signedToken: string): boolean {
     const parts = signedToken.split('.');
     if (parts.length !== 2) return false;
-    
+
     const [token, signature] = parts;
     const hmac = createHmac('sha256', securityConfig.csrfSecret);
     hmac.update(token);
     const expectedSignature = hmac.digest('hex');
-    
+
     // Constant-time comparison to prevent timing attacks
     if (signature.length !== expectedSignature.length) return false;
-    
+
     let result = 0;
     for (let i = 0; i < signature.length; i++) {
         result |= signature.charCodeAt(i) ^ expectedSignature.charCodeAt(i);
     }
-    
+
     return result === 0;
 }
 
@@ -58,7 +58,7 @@ function verifySignedToken(signedToken: string): boolean {
 export function setCSRFCookie(res: NextApiResponse): string {
     const token = generateToken();
     const signedToken = signToken(token);
-    
+
     const cookie = serialize(CSRF_COOKIE_NAME, signedToken, {
         httpOnly: false, // Needs to be readable by JavaScript
         secure: process.env.NODE_ENV === 'production',
@@ -66,7 +66,7 @@ export function setCSRFCookie(res: NextApiResponse): string {
         path: '/',
         maxAge: 60 * 60, // 1 hour
     });
-    
+
     res.setHeader('Set-Cookie', cookie);
     return signedToken;
 }
@@ -86,45 +86,68 @@ export function csrfProtection(
     ): Promise<void> {
         // Safe methods don't need CSRF protection
         const safeMethods = ['GET', 'HEAD', 'OPTIONS'];
-        
+
         if (safeMethods.includes(req.method || '')) {
             // Set CSRF cookie for subsequent requests
             setCSRFCookie(res);
             return handler(req, res);
         }
-        
+
         // For state-changing methods, validate CSRF token
         const cookies = parse(req.headers.cookie || '');
         const cookieToken = cookies[CSRF_COOKIE_NAME];
         const headerToken = req.headers[CSRF_HEADER_NAME] as string;
-        
+
         // Both tokens must be present
         if (!cookieToken || !headerToken) {
-            return res.status(403).json({ 
+            return res.status(403).json({
                 error: 'CSRF token missing',
                 code: 'CSRF_MISSING'
             });
         }
-        
+
         // Tokens must match
         if (cookieToken !== headerToken) {
-            return res.status(403).json({ 
+            return res.status(403).json({
                 error: 'CSRF token mismatch',
                 code: 'CSRF_INVALID'
             });
         }
-        
+
         // Verify token signature
         if (!verifySignedToken(cookieToken)) {
-            return res.status(403).json({ 
+            return res.status(403).json({
                 error: 'CSRF token invalid',
                 code: 'CSRF_INVALID'
             });
         }
-        
+
         // Token is valid, proceed
         return handler(req, res);
     };
+}
+
+/**
+ * Verify CSRF token from request (for use in middleware)
+ * Returns true if token is valid, false otherwise
+ */
+export function verifyCSRFToken(req: NextApiRequest): boolean {
+    const cookies = parse(req.headers.cookie || '');
+    const cookieToken = cookies[CSRF_COOKIE_NAME];
+    const headerToken = req.headers[CSRF_HEADER_NAME] as string;
+
+    // Both tokens must be present
+    if (!cookieToken || !headerToken) {
+        return false;
+    }
+
+    // Tokens must match
+    if (cookieToken !== headerToken) {
+        return false;
+    }
+
+    // Verify token signature
+    return verifySignedToken(cookieToken);
 }
 
 /**
@@ -132,7 +155,7 @@ export function csrfProtection(
  */
 export function getCSRFToken(): string | null {
     if (typeof document === 'undefined') return null;
-    
+
     const cookies = parse(document.cookie);
     return cookies[CSRF_COOKIE_NAME] || null;
 }

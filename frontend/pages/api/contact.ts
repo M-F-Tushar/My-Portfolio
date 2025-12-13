@@ -24,7 +24,7 @@ export default async function handler(
     // Apply strict rate limiting for contact form
     const allowed = await strictRateLimit(req, res);
     if (!allowed) return;
-    
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -53,7 +53,7 @@ export default async function handler(
 
         // Send email notification
         const emailResult = await sendContactNotification({ name, email, message });
-        
+
         if (!emailResult.success && process.env.RESEND_API_KEY) {
             // Only fail if email is configured but failed
             console.error('Failed to send contact notification:', emailResult.error);
@@ -64,7 +64,13 @@ export default async function handler(
             message: 'Thank you for your message! I will get back to you soon.'
         });
     } catch (error) {
-        console.error('Error processing contact form:', error);
+        // Sanitize error logging
+        const isDev = process.env.NODE_ENV === 'development';
+        console.error('Contact form error:', {
+            message: error instanceof Error ? error.message : 'Unknown error',
+            timestamp: new Date().toISOString(),
+            ...(isDev && error instanceof Error && { stack: error.stack }),
+        });
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
