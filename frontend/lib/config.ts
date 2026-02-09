@@ -18,7 +18,7 @@ export const siteConfig = {
     defaultImage: '/og-image.png',
 
     // Theme
-    themeColor: '#667eea',
+    themeColor: '#06b6d4',
 } as const;
 
 // API Configuration

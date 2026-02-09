@@ -90,7 +90,7 @@ export default function SEO({
 
             {/* Additional Meta Tags */}
             <meta name="theme-color" content={siteConfig.themeColor} />
-            <meta name="msapplication-TileColor" content="#667eea" />
+            <meta name="msapplication-TileColor" content="#06b6d4" />
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 

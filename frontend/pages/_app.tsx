@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
+import { AnimatePresence, motion } from 'framer-motion';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -40,15 +41,23 @@ export default function App({ Component, pageProps }: AppProps) {
                     <SkipLink />
 
                     {isAdminPage ? (
-                        // Admin pages have their own layout
                         <Component {...pageProps} />
                     ) : (
-                        // Public pages with Nav and Footer
                         <div className="flex flex-col min-h-screen">
                             <Nav />
-                            <main id="main-content" className="flex-grow">
-                                <Component {...pageProps} />
-                            </main>
+                            <AnimatePresence mode="wait">
+                                <motion.main
+                                    key={router.asPath}
+                                    id="main-content"
+                                    className="flex-grow"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                >
+                                    <Component {...pageProps} />
+                                </motion.main>
+                            </AnimatePresence>
                             <Footer />
                         </div>
                     )}

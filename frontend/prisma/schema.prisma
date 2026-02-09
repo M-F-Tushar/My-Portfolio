@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DIRECT_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model Profile {
@@ -38,11 +37,12 @@ model SocialLink {
 }
 
 model Skill {
-  id        Int      @id @default(autoincrement())
-  name      String
-  category  String   // e.g., "Machine Learning", "LLMs & NLP", "Data & MLOps", "Deployment"
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String   // e.g., "Machine Learning", "LLMs & NLP", "Data & MLOps", "Deployment"
+  proficiency Int      @default(50) // 0-100 skill proficiency level
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Experience {
@@ -150,4 +150,34 @@ model ContactSubmission {
   message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+// === PHASE 3: RESEARCH & ACHIEVEMENTS ===
+
+model Publication {
+  id          Int      @id @default(autoincrement())
+  title       String
+  authors     String   // Comma-separated author names
+  venue       String   // Conference/journal name
+  year        Int
+  abstract    String?  // Paper abstract
+  url         String?  // Link to paper
+  doi         String?  // Digital Object Identifier
+  type        String   @default("preprint") // conference, journal, preprint, thesis
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Achievement {
+  id           Int      @id @default(autoincrement())
+  title        String
+  organization String   // Awarding body
+  year         Int
+  description  String?
+  url          String?  // Link to details
+  type         String   @default("recognition") // award, competition, scholarship, recognition
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

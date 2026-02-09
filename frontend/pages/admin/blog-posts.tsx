@@ -1,51 +1,63 @@
 import { useState, useEffect } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AdminLayout from '@/components/AdminLayout';
-import ImageUpload from '@/components/admin/ImageUpload';
-import MarkdownEditor from '@/components/admin/MarkdownEditor';
 import axios from 'axios';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import MarkdownEditor from '@/components/admin/MarkdownEditor';
+import ImageUpload from '@/components/admin/ImageUpload';
 
-interface Project {
+interface BlogPost {
     id?: number;
     title: string;
-    slug?: string;
-    description: string;
-    content?: string;
-    imageUrl?: string;
-    demoUrl?: string;
-    repoUrl?: string;
-    techStack: string;
-    featured: boolean;
+    slug: string;
+    excerpt: string;
+    content: string;
+    coverImage: string;
+    tags: string;
+    published: boolean;
+    publishedAt?: string;
+    readTime: number;
 }
 
-export default function ProjectsManagement() {
-    const [projects, setProjects] = useState<Project[]>([]);
+function tagsJsonToComma(json: string): string {
+    try {
+        const arr = JSON.parse(json);
+        if (Array.isArray(arr)) return arr.join(', ');
+    } catch {}
+    return json;
+}
+
+function tagsCommaToJson(csv: string): string {
+    const arr = csv.split(',').map((t) => t.trim()).filter(Boolean);
+    return JSON.stringify(arr);
+}
+
+export default function BlogPostsManagement() {
+    const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [showForm, setShowForm] = useState(false);
-    const [formData, setFormData] = useState<Project>({
+    const [formData, setFormData] = useState<BlogPost>({
         title: '',
         slug: '',
-        description: '',
+        excerpt: '',
         content: '',
-        imageUrl: '',
-        demoUrl: '',
-        repoUrl: '',
-        techStack: '',
-        featured: false
+        coverImage: '',
+        tags: '',
+        published: false,
+        readTime: 1
     });
 
     useEffect(() => {
-        fetchProjects();
+        fetchBlogPosts();
     }, []);
 
-    const fetchProjects = async () => {
+    const fetchBlogPosts = async () => {
         try {
-            const response = await axios.get('/api/admin/projects');
-            setProjects(response.data);
+            const response = await axios.get('/api/admin/blog-posts');
+            setBlogPosts(response.data);
         } catch (error) {
-            console.error('Error fetching projects:', error);
+            console.error('Error fetching blog posts:', error);
         } finally {
             setLoading(false);
         }
@@ -54,34 +66,43 @@ export default function ProjectsManagement() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        const payload = {
+            ...formData,
+            tags: tagsCommaToJson(formData.tags),
+            readTime: Math.max(1, Math.ceil(formData.content.split(/\s+/).filter(Boolean).length / 200))
+        };
+
         try {
             if (editingId) {
-                await axios.put('/api/admin/projects', { ...formData, id: editingId });
+                await axios.put('/api/admin/blog-posts', { ...payload, id: editingId });
             } else {
-                await axios.post('/api/admin/projects', formData);
+                await axios.post('/api/admin/blog-posts', payload);
             }
 
-            fetchProjects();
+            fetchBlogPosts();
             resetForm();
         } catch (error) {
-            console.error('Error saving project:', error);
+            console.error('Error saving blog post:', error);
         }
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm('Are you sure you want to delete this project?')) return;
+        if (!confirm('Are you sure you want to delete this blog post?')) return;
 
         try {
-            await axios.delete('/api/admin/projects', { data: { id } });
-            fetchProjects();
+            await axios.delete('/api/admin/blog-posts', { data: { id } });
+            fetchBlogPosts();
         } catch (error) {
-            console.error('Error deleting project:', error);
+            console.error('Error deleting blog post:', error);
         }
     };
 
-    const handleEdit = (project: Project) => {
-        setFormData(project);
-        setEditingId(project.id!);
+    const handleEdit = (post: BlogPost) => {
+        setFormData({
+            ...post,
+            tags: tagsJsonToComma(post.tags)
+        });
+        setEditingId(post.id!);
         setShowForm(true);
     };
 
@@ -89,17 +110,18 @@ export default function ProjectsManagement() {
         setFormData({
             title: '',
             slug: '',
-            description: '',
+            excerpt: '',
             content: '',
-            imageUrl: '',
-            demoUrl: '',
-            repoUrl: '',
-            techStack: '',
-            featured: false
+            coverImage: '',
+            tags: '',
+            published: false,
+            readTime: 1
         });
         setEditingId(null);
         setShowForm(false);
     };
+
+    const estimatedReadTime = Math.max(1, Math.ceil(formData.content.split(/\s+/).filter(Boolean).length / 200));
 
     if (loading) {
         return (
@@ -119,15 +141,15 @@ export default function ProjectsManagement() {
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-8 flex justify-between items-center">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">Projects Management</h1>
-                            <p className="text-gray-600 mt-2">Manage your portfolio projects</p>
+                            <h1 className="text-3xl font-bold text-gray-900">Blog Posts Management</h1>
+                            <p className="text-gray-600 mt-2">Manage your blog posts</p>
                         </div>
                         <button
                             onClick={() => setShowForm(!showForm)}
                             className="btn-primary flex items-center space-x-2"
                         >
                             {showForm ? <X className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-                            <span>{showForm ? 'Cancel' : 'Add Project'}</span>
+                            <span>{showForm ? 'Cancel' : 'Add Blog Post'}</span>
                         </button>
                     </div>
 
@@ -158,76 +180,55 @@ export default function ProjectsManagement() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tech Stack (JSON array)</label>
-                                    <input
-                                        type="text"
-                                        value={formData.techStack}
-                                        onChange={(e) => setFormData({ ...formData, techStack: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                                        placeholder='["React", "Node.js"]'
-                                        required
-                                    />
-                                </div>
-                            </div>
-
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (Short summary)</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Excerpt (Short summary)</label>
                                 <textarea
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    value={formData.excerpt}
+                                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                                     rows={3}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                                    required
                                 />
                             </div>
 
-                            <MarkdownEditor
-                                label="Content (Markdown - detailed project description)"
-                                value={formData.content || ''}
-                                onChange={(val) => setFormData({ ...formData, content: val })}
-                                placeholder="# Project Overview&#10;&#10;Detailed markdown content for the project detail page..."
-                            />
+                            <div>
+                                <MarkdownEditor
+                                    label="Content"
+                                    value={formData.content}
+                                    onChange={(value) => setFormData({ ...formData, content: value })}
+                                    placeholder="Write your blog post content in markdown..."
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Estimated read time: {estimatedReadTime} min
+                                </p>
+                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <ImageUpload
-                                        label="Project Image"
-                                        value={formData.imageUrl || ''}
-                                        onChange={(url) => setFormData({ ...formData, imageUrl: url })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Demo URL</label>
-                                    <input
-                                        type="text"
-                                        value={formData.demoUrl}
-                                        onChange={(e) => setFormData({ ...formData, demoUrl: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                                        placeholder="https://..."
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Repo URL</label>
-                                    <input
-                                        type="text"
-                                        value={formData.repoUrl}
-                                        onChange={(e) => setFormData({ ...formData, repoUrl: e.target.value })}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                                        placeholder="https://github.com/..."
-                                    />
-                                </div>
+                            <div>
+                                <ImageUpload
+                                    label="Cover Image"
+                                    value={formData.coverImage}
+                                    onChange={(url) => setFormData({ ...formData, coverImage: url })}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags (comma-separated)</label>
+                                <input
+                                    type="text"
+                                    value={formData.tags}
+                                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                                    placeholder="React, TypeScript, Next.js"
+                                />
                             </div>
 
                             <div className="flex items-center">
                                 <input
                                     type="checkbox"
-                                    checked={formData.featured}
-                                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                                    checked={formData.published}
+                                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
                                     className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                                 />
-                                <label className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Featured Project</label>
+                                <label className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Published</label>
                             </div>
 
                             <div className="flex justify-end space-x-3 pt-4">
@@ -242,36 +243,48 @@ export default function ProjectsManagement() {
                         </form>
                     )}
 
-                    {/* Projects List */}
+                    {/* Blog Posts List */}
                     <div className="space-y-4">
-                        {projects.map((project) => (
-                            <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        {blogPosts.map((post) => (
+                            <div key={post.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                                 <div className="flex justify-between items-start">
                                     <div className="flex-1">
                                         <div className="flex items-center space-x-2">
-                                            <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
-                                            {project.featured && (
-                                                <span className="px-2 py-1 bg-primary-100 text-primary-600 text-xs font-medium rounded">Featured</span>
+                                            <h3 className="text-xl font-semibold text-gray-900">{post.title}</h3>
+                                            {post.published ? (
+                                                <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">Published</span>
+                                            ) : (
+                                                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">Draft</span>
                                             )}
                                         </div>
-                                        <p className="text-gray-600 mt-2">{project.description}</p>
+                                        {post.excerpt && (
+                                            <p className="text-gray-600 mt-2">
+                                                {post.excerpt.length > 150 ? post.excerpt.substring(0, 150) + '...' : post.excerpt}
+                                            </p>
+                                        )}
                                         <div className="mt-3 flex flex-wrap gap-2">
-                                            {JSON.parse(project.techStack || '[]').map((tech: string, idx: number) => (
+                                            {JSON.parse(post.tags || '[]').map((tag: string, idx: number) => (
                                                 <span key={idx} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-full">
-                                                    {tech}
+                                                    {tag}
                                                 </span>
                                             ))}
+                                        </div>
+                                        <div className="mt-2 text-sm text-gray-500">
+                                            {post.readTime} min read
+                                            {post.publishedAt && (
+                                                <span> &middot; {new Date(post.publishedAt).toLocaleDateString()}</span>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="flex space-x-2 ml-4">
                                         <button
-                                            onClick={() => handleEdit(project)}
+                                            onClick={() => handleEdit(post)}
                                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
                                         >
                                             <Edit className="w-5 h-5" />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(project.id!)}
+                                            onClick={() => handleDelete(post.id!)}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
                                         >
                                             <Trash2 className="w-5 h-5" />

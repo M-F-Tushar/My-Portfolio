@@ -47,6 +47,16 @@ export default async function handler(
         // Log the submission
         console.log('Contact form submission:', { name, email, message: message.substring(0, 100) + '...' });
 
+        // Save to database
+        try {
+            await prisma.contactSubmission.create({
+                data: { name, email, message }
+            });
+        } catch (dbError) {
+            console.error('Failed to save contact submission to DB:', dbError);
+            // Continue even if DB save fails - still send email
+        }
+
         // Send email notification
         const emailResult = await sendContactNotification({ name, email, message });
 

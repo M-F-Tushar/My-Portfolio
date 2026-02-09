@@ -25,14 +25,14 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const STORAGE_KEY = 'portfolio-theme';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setThemeState] = useState<Theme>('system');
-    const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+    const [theme, setThemeState] = useState<Theme>('dark');
+    const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('dark');
     const [mounted, setMounted] = useState(false);
 
     // Get system preference
     const getSystemTheme = useCallback((): 'light' | 'dark' => {
-        if (typeof window === 'undefined') return 'light';
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (typeof window === 'undefined') return 'dark';
+        return 'dark';
     }, []);
 
     // Resolve the actual theme based on setting

@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, Shield } from 'lucide-react';
-import dynamic from 'next/dynamic';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/lib/AuthContext';
 import { useActiveSection } from '@/hooks/useActiveSection';
 import axios from 'axios';
-
-const ThemeToggle = dynamic(() => import('./ThemeToggle'), { ssr: false });
 
 export default function Nav() {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +16,6 @@ export default function Nav() {
     const [scrolled, setScrolled] = useState(false);
     const [navItems, setNavItems] = useState<Array<{ label: string; href: string }>>([]);
 
-    // Track active section for navigation highlighting
     const sectionIds = navItems
         .filter(item => item.href.startsWith('#'))
         .map(item => item.href.slice(1));
@@ -34,11 +31,9 @@ export default function Nav() {
             .then(res => setProfileName(res.data.name || 'Portfolio'))
             .catch(() => setProfileName('Portfolio'));
 
-        // Fetch navigation items
         axios.get('/api/nav-items')
             .then(res => setNavItems(res.data || []))
             .catch(() => {
-                // Fallback to default nav items if API fails
                 setNavItems([
                     { label: 'About', href: '#about' },
                     { label: 'Skills', href: '#skills' },
@@ -49,7 +44,6 @@ export default function Nav() {
                 ]);
             });
 
-        // Handle scroll for glassmorphism effect
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
@@ -70,7 +64,7 @@ export default function Nav() {
 
     if (!mounted) {
         return (
-            <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-sm">
+            <nav className="sticky top-0 z-50 bg-dark-900/70 backdrop-blur-xl border-b border-cyan-500/10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <div className="text-2xl font-bold gradient-text">Portfolio</div>
@@ -81,10 +75,13 @@ export default function Nav() {
     }
 
     return (
-        <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled
-            ? 'glass dark:bg-gray-900/80 shadow-lg'
-            : 'bg-white dark:bg-gray-900 shadow-sm'
-            }`}>
+        <nav
+            className={`sticky top-0 z-50 transition-all duration-500 ${
+                scrolled
+                    ? 'bg-dark-900/90 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_0_20px_rgba(6,182,212,0.1)]'
+                    : 'bg-dark-900/70 backdrop-blur-xl border-b border-cyan-500/10'
+            }`}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
@@ -93,7 +90,7 @@ export default function Nav() {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-6">
+                    <div className="hidden md:flex items-center space-x-8">
                         {navItems.map((item) => {
                             const sectionId = item.href.startsWith('#') ? item.href.slice(1) : '';
                             const isActive = sectionId === activeSection;
@@ -103,35 +100,32 @@ export default function Nav() {
                                     key={item.label}
                                     href={item.href}
                                     onClick={(e) => handleClick(e, item.href)}
-                                    className={`relative py-1 transition-colors font-medium ${isActive
-                                            ? 'text-primary-600 dark:text-primary-400'
-                                            : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
-                                        }`}
+                                    className={`relative py-1 transition-colors duration-300 text-sm font-medium ${
+                                        isActive
+                                            ? 'text-cyan-400'
+                                            : 'text-gray-400 hover:text-cyan-400'
+                                    }`}
                                 >
                                     {item.label}
-                                    {/* Active indicator */}
-                                    <span className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary-600 dark:bg-primary-400 transform transition-transform origin-left ${isActive ? 'scale-x-100' : 'scale-x-0'
-                                        }`} />
+                                    <span
+                                        className={`absolute -bottom-1 left-0 w-full h-0.5 bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)] transform transition-transform duration-300 origin-left ${
+                                            isActive ? 'scale-x-100' : 'scale-x-0'
+                                        }`}
+                                    />
                                 </a>
                             );
                         })}
                         {user && (
                             <Link
                                 href="/admin"
-                                className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors font-medium flex items-center space-x-1"
+                                className="text-cyan-400 hover:text-cyan-300 transition-colors font-medium flex items-center space-x-1 text-sm"
                             >
                                 <Shield className="w-4 h-4" />
                                 <span>Admin</span>
                             </Link>
                         )}
 
-                        {/* Theme Toggle */}
-                        <ThemeToggle />
-
-                        <a
-                            href="/resume.pdf"
-                            className="btn-primary text-sm"
-                        >
+                        <a href="/resume.pdf" className="btn-primary text-sm">
                             Resume
                         </a>
                     </div>
@@ -139,7 +133,8 @@ export default function Nav() {
                     {/* Mobile menu button */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+                        className="md:hidden p-2 rounded-lg text-gray-400 hover:text-cyan-400 hover:bg-white/5 transition-colors"
+                        aria-label="Toggle menu"
                     >
                         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
@@ -147,51 +142,57 @@ export default function Nav() {
             </div>
 
             {/* Mobile Navigation */}
-            {isOpen && (
-                <div className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800">
-                    <div className="px-4 py-4 space-y-3">
-                        {navItems.map((item) => {
-                            const sectionId = item.href.startsWith('#') ? item.href.slice(1) : '';
-                            const isActive = sectionId === activeSection;
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="md:hidden overflow-hidden bg-dark-800/95 backdrop-blur-xl border-t border-cyan-500/10"
+                    >
+                        <div className="px-4 py-4 space-y-1">
+                            {navItems.map((item) => {
+                                const sectionId = item.href.startsWith('#') ? item.href.slice(1) : '';
+                                const isActive = sectionId === activeSection;
 
-                            return (
-                                <a
-                                    key={item.label}
-                                    href={item.href}
-                                    onClick={(e) => handleClick(e, item.href)}
-                                    className={`block transition-colors font-medium py-2 ${isActive
-                                            ? 'text-primary-600 dark:text-primary-400 border-l-2 border-primary-600 pl-3'
-                                            : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
+                                return (
+                                    <a
+                                        key={item.label}
+                                        href={item.href}
+                                        onClick={(e) => handleClick(e, item.href)}
+                                        className={`block py-3 px-3 rounded-lg transition-colors font-medium ${
+                                            isActive
+                                                ? 'text-cyan-400 bg-cyan-500/10 border-l-2 border-cyan-400'
+                                                : 'text-gray-400 hover:text-cyan-400 hover:bg-white/5'
                                         }`}
+                                    >
+                                        {item.label}
+                                    </a>
+                                );
+                            })}
+                            {user && (
+                                <Link
+                                    href="/admin"
+                                    className="block text-cyan-400 hover:text-cyan-300 transition-colors font-medium py-3 px-3 flex items-center space-x-2"
                                 >
-                                    {item.label}
+                                    <Shield className="w-4 h-4" />
+                                    <span>Admin</span>
+                                </Link>
+                            )}
+
+                            <div className="pt-2">
+                                <a
+                                    href="/resume.pdf"
+                                    className="block btn-primary text-center text-sm"
+                                >
+                                    Download Resume
                                 </a>
-                            );
-                        })}
-                        {user && (
-                            <Link
-                                href="/admin"
-                                className="block text-primary-600 dark:text-primary-400 hover:text-primary-700 transition-colors font-medium py-2 flex items-center space-x-1"
-                            >
-                                <Shield className="w-4 h-4" />
-                                <span>Admin</span>
-                            </Link>
-                        )}
-
-                        <div className="flex items-center justify-between py-2 border-t dark:border-gray-800">
-                            <span className="text-gray-600 dark:text-gray-400">Theme</span>
-                            <ThemeToggle />
+                            </div>
                         </div>
-
-                        <a
-                            href="/resume.pdf"
-                            className="block btn-primary text-center"
-                        >
-                            Download Resume
-                        </a>
-                    </div>
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </nav>
     );
 }

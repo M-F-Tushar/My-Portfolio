@@ -17,8 +17,7 @@ export function Skeleton({ className = '' }: SkeletonProps) {
     return (
         <div 
             className={`
-                animate-pulse bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200
-                dark:from-gray-700 dark:via-gray-600 dark:to-gray-700
+                animate-pulse bg-gradient-to-r from-dark-800 via-dark-700 to-dark-800
                 bg-[length:400%_100%] animate-shimmer rounded
                 ${className}
             `}
@@ -62,7 +61,7 @@ export function SkeletonAvatar({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' | 'x
  */
 export function SkeletonCard({ className = '' }: SkeletonProps) {
     return (
-        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden ${className}`}>
+        <div className={`card-neon overflow-hidden ${className}`}>
             {/* Image placeholder */}
             <Skeleton className="aspect-video w-full" />
             
@@ -127,7 +126,7 @@ export function SkeletonProfile() {
  */
 export function SkeletonExperience() {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
+        <div className="card-neon p-6 space-y-4">
             <div className="flex justify-between items-start">
                 <div className="space-y-2">
                     <Skeleton className="h-6 w-48" />
@@ -159,7 +158,7 @@ export function SkeletonSkills() {
     return (
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 space-y-4">
+                <div key={i} className="card-neon p-6 space-y-4">
                     <Skeleton className="w-12 h-12 rounded-lg" />
                     <Skeleton className="h-6 w-32" />
                     <div className="flex flex-wrap gap-2">

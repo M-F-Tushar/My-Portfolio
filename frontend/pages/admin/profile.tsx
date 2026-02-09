@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AdminLayout from '@/components/AdminLayout';
+import ImageUpload from '@/components/admin/ImageUpload';
 import axios from 'axios';
 import { Save } from 'lucide-react';
 
@@ -156,25 +157,19 @@ export default function ProfileManagement() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Avatar URL</label>
-                                <input
-                                    type="text"
+                                <ImageUpload
+                                    label="Avatar"
                                     value={profile?.avatarUrl || ''}
-                                    onChange={(e) => handleChange('avatarUrl', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                    placeholder="https://..."
+                                    onChange={(url) => handleChange('avatarUrl', url)}
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">About Image URL</label>
-                            <input
-                                type="text"
+                            <ImageUpload
+                                label="About Image"
                                 value={profile?.aboutImage || ''}
-                                onChange={(e) => handleChange('aboutImage', e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                placeholder="https://..."
+                                onChange={(url) => handleChange('aboutImage', url)}
                             />
                         </div>
 

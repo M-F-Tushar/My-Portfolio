@@ -1,10 +1,8 @@
-/**
- * Testimonial Card Component
- */
-
 import React from 'react';
 import Image from 'next/image';
 import { Quote } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { MotionFade, StaggerContainer, StaggerItem } from './motion/MotionWrapper';
 
 export interface Testimonial {
     id: number;
@@ -22,19 +20,22 @@ interface TestimonialCardProps {
 
 export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
     return (
-        <div className="card p-6 relative group">
+        <motion.div
+            className="card-neon p-6 relative group h-full flex flex-col"
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+        >
             {/* Quote icon */}
-            <Quote className="absolute top-4 right-4 w-8 h-8 text-primary-100 dark:text-primary-800 group-hover:text-primary-200 transition-colors" />
-            
+            <Quote className="absolute top-4 right-4 w-8 h-8 text-cyan-500/10 group-hover:text-cyan-500/20 transition-colors" />
+
             {/* Content */}
-            <blockquote className="text-gray-700 dark:text-gray-300 mb-6 relative z-10">
+            <blockquote className="text-gray-300 mb-6 relative z-10 flex-1">
                 <p className="italic leading-relaxed">&ldquo;{testimonial.content}&rdquo;</p>
             </blockquote>
-            
+
             {/* Author */}
             <div className="flex items-center gap-4">
                 {/* Avatar */}
-                <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold overflow-hidden">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-electric-500 flex items-center justify-center text-white font-bold overflow-hidden ring-2 ring-cyan-500/20">
                     {testimonial.avatarUrl ? (
                         <Image
                             src={testimonial.avatarUrl}
@@ -44,19 +45,19 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
                             className="w-full h-full object-cover"
                         />
                     ) : (
-                        <span>{testimonial.name.charAt(0)}</span>
+                        <span className="text-lg">{testimonial.name.charAt(0)}</span>
                     )}
                 </div>
-                
+
                 {/* Info */}
                 <div>
-                    <div className="font-semibold text-gray-900 dark:text-white">
+                    <div className="font-semibold text-white">
                         {testimonial.linkedinUrl ? (
-                            <a 
+                            <a
                                 href={testimonial.linkedinUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="hover:text-primary-600 transition-colors"
+                                className="hover:text-cyan-400 transition-colors"
                             >
                                 {testimonial.name}
                             </a>
@@ -64,12 +65,12 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
                             testimonial.name
                         )}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-gray-400">
                         {testimonial.role} at {testimonial.company}
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -82,17 +83,25 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
     }
 
     return (
-        <section id="testimonials" className="py-20 px-4 bg-gray-50 dark:bg-gray-900">
-            <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl font-bold mb-12 text-center">
-                    What People <span className="gradient-text">Say</span>
-                </h2>
-                
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section id="testimonials" className="py-24 px-4 bg-dark-900 relative overflow-hidden">
+            <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl" />
+            <div className="max-w-6xl mx-auto relative z-10">
+                <MotionFade>
+                    <h2 className="text-4xl font-bold mb-4 text-center text-white">
+                        What People <span className="gradient-text">Say</span>
+                    </h2>
+                    <p className="text-lg text-center text-gray-400 mb-12 max-w-xl mx-auto">
+                        Feedback from colleagues and collaborators
+                    </p>
+                </MotionFade>
+
+                <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {testimonials.map((testimonial) => (
-                        <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+                        <StaggerItem key={testimonial.id}>
+                            <TestimonialCard testimonial={testimonial} />
+                        </StaggerItem>
                     ))}
-                </div>
+                </StaggerContainer>
             </div>
         </section>
     );

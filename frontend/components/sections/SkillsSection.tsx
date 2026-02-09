@@ -1,9 +1,18 @@
 import { Brain, Zap, Database, Cpu } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Skill } from '@prisma/client';
+import { MotionFade, StaggerContainer, StaggerItem } from '../motion/MotionWrapper';
 
 interface SkillsSectionProps {
     skills: Skill[];
 }
+
+const categoryConfig: Record<string, { icon: typeof Brain }> = {
+    'Machine Learning': { icon: Brain },
+    'LLMs & NLP': { icon: Zap },
+    'Data & MLOps': { icon: Database },
+    'Deployment': { icon: Cpu },
+};
 
 export default function SkillsSection({ skills }: SkillsSectionProps) {
     const skillsByCategory = skills.reduce((acc, skill) => {
@@ -13,65 +22,44 @@ export default function SkillsSection({ skills }: SkillsSectionProps) {
     }, {} as Record<string, string[]>);
 
     return (
-        <section id="skills" className="py-20 px-4 bg-gray-50">
+        <section id="skills" className="py-24 px-4 bg-dark-950 bg-grid relative">
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl font-bold mb-12 text-center">
-                    AI/ML <span className="gradient-text">Expertise</span>
-                </h2>
+                <MotionFade>
+                    <h2 className="text-4xl font-bold mb-12 text-center text-white">
+                        Technical <span className="gradient-text">Arsenal</span>
+                    </h2>
+                </MotionFade>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {/* Machine Learning */}
-                    <div className="card p-6 gradient-border group">
-                        <Brain className="w-12 h-12 text-primary-600 mb-4 group-hover:scale-110 transition-transform" />
-                        <h3 className="text-xl font-semibold mb-4">Machine Learning</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {skillsByCategory['Machine Learning']?.map(skill => (
-                                <span key={skill} className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm hover:bg-primary-200 transition-colors cursor-default">
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
+                <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {Object.entries(skillsByCategory).map(([category, categorySkills]) => {
+                        const config = categoryConfig[category] || { icon: Brain };
+                        const Icon = config.icon;
 
-                    {/* LLMs & NLP */}
-                    <div className="card p-6 gradient-border group">
-                        <Zap className="w-12 h-12 text-accent-600 mb-4 group-hover:scale-110 transition-transform" />
-                        <h3 className="text-xl font-semibold mb-4">LLMs & NLP</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {skillsByCategory['LLMs & NLP']?.map(skill => (
-                                <span key={skill} className="px-3 py-1 bg-accent-100 text-accent-700 rounded-full text-sm hover:bg-accent-200 transition-colors cursor-default">
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Data & MLOps */}
-                    <div className="card p-6 gradient-border group">
-                        <Database className="w-12 h-12 text-primary-600 mb-4 group-hover:scale-110 transition-transform" />
-                        <h3 className="text-xl font-semibold mb-4">Data & MLOps</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {skillsByCategory['Data & MLOps']?.map(skill => (
-                                <span key={skill} className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm hover:bg-primary-200 transition-colors cursor-default">
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Deployment */}
-                    <div className="card p-6 gradient-border group">
-                        <Cpu className="w-12 h-12 text-accent-600 mb-4 group-hover:scale-110 transition-transform" />
-                        <h3 className="text-xl font-semibold mb-4">Deployment</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {skillsByCategory['Deployment']?.map(skill => (
-                                <span key={skill} className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-default">
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                        return (
+                            <StaggerItem key={category}>
+                                <motion.div
+                                    className="card-neon p-6 group h-full"
+                                    whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                                >
+                                    <motion.div
+                                        whileHover={{ scale: 1.2, rotate: 5 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <Icon className="w-12 h-12 text-cyan-400 mb-4 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)] group-hover:text-cyan-300 transition-colors" />
+                                    </motion.div>
+                                    <h3 className="text-xl font-semibold text-white mb-4">{category}</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {categorySkills.map(skill => (
+                                            <span key={skill} className="tech-tag text-xs cursor-default">
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            </StaggerItem>
+                        );
+                    })}
+                </StaggerContainer>
             </div>
         </section>
     );

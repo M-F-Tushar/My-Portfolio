@@ -116,6 +116,40 @@ export default async function handler(
             console.warn('Database unavailable for sitemap generation:', dbError);
         }
 
+        // Fetch published blog posts
+        try {
+            const blogPosts = await prisma.blogPost.findMany({
+                where: { published: true },
+                select: {
+                    slug: true,
+                    updatedAt: true,
+                },
+                orderBy: { updatedAt: 'desc' },
+            });
+
+            // Add blog listing page
+            if (blogPosts.length > 0) {
+                pages.push({
+                    loc: '/blog',
+                    lastmod: currentDate,
+                    changefreq: 'weekly',
+                    priority: 0.8,
+                });
+            }
+
+            // Add individual blog post pages
+            for (const post of blogPosts) {
+                pages.push({
+                    loc: `/blog/${post.slug}`,
+                    lastmod: post.updatedAt.toISOString().split('T')[0],
+                    changefreq: 'monthly',
+                    priority: 0.6,
+                });
+            }
+        } catch (dbError) {
+            console.warn('Database unavailable for blog sitemap:', dbError);
+        }
+
         // Generate sitemap XML
         const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
