@@ -824,6 +824,6 @@ For questions or issues:
 
 ---
 
-**Built with ❤️ by [Your Name](https://yoursite.com)**
+**Built with ❤️ by [Mahir Faysal Tusher](https://github.com/M-F-Tushar)**
 
 ⭐ Star this repo if you find it helpful!
