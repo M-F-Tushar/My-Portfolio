@@ -18,7 +18,7 @@ EXPOSE 8000
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 # Stage 2: Frontend build
-FROM node:18-alpine as frontend-builder
+FROM node:25-alpine as frontend-builder
 
 WORKDIR /app/frontend
 
@@ -34,7 +34,7 @@ COPY content/ /app/content/
 RUN npm run build
 
 # Stage 3: Frontend production
-FROM node:18-alpine as frontend
+FROM node:25-alpine as frontend
 
 WORKDIR /app/frontend
 
