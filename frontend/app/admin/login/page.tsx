@@ -127,7 +127,7 @@ export default function AdminLoginPage() {
                                             value={password}
                                             onChange={(event) => setPassword(event.target.value)}
                                             className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500"
-                                            placeholder="••••••••"
+                                            placeholder="Password"
                                         />
                                     </span>
                                 </label>

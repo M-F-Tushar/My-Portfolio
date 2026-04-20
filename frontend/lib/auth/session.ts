@@ -31,6 +31,8 @@ export async function signAdminSession(session: AdminSession): Promise<string> {
         .sign(getSecretKey());
 }
 
+export const sign = signAdminSession;
+
 export async function verifyAdminSession(token: string): Promise<AdminSession | null> {
     try {
         const { payload } = await jwtVerify(token, getSecretKey(), {
@@ -54,6 +56,8 @@ export async function verifyAdminSession(token: string): Promise<AdminSession | 
         return null;
     }
 }
+
+export const verify = verifyAdminSession;
 
 export async function getCurrentAdmin(sessionToken?: string): Promise<AdminSession | null> {
     const token = sessionToken ?? await readSessionCookieFromNextHeaders();

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/db';
 import { loginSchema } from '@/lib/validations/auth';
 import {
     SESSION_COOKIE,
