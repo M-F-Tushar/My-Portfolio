@@ -93,7 +93,7 @@ async function main() {
   for (const project of projects) {
     await prisma.project.upsert({
       where: { slug: project.slug },
-      update: project,
+      update: {},
       create: project,
     });
   }
@@ -120,9 +120,7 @@ async function main() {
 
   for (const social of socials) {
     const existing = await prisma.socialLink.findFirst({ where: { platform: social.platform } });
-    if (existing) {
-      await prisma.socialLink.update({ where: { id: existing.id }, data: social });
-    } else {
+    if (!existing) {
       await prisma.socialLink.create({ data: social });
     }
   }

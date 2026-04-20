@@ -70,7 +70,7 @@ model Profile {
   shortBio      String      @default("Undergraduate Computer Science student building practical AI systems across LLMs, machine learning, and MLOps.")
   about         String      @default("I am building a professional foundation in AI Engineering, ML Engineering, LLM applications, and MLOps through projects, coursework, and continuous experimentation.")
   location      String      @default("Chandpur, Bangladesh")
-  email         String      @default("www.mahirfaysaltushar@gmail.com")
+  email         String      @default("mahirfaysaltushar@gmail.com")
   currentFocus  String      @default("LLMs, machine learning systems, production-ready AI workflows, and MLOps foundations.")
   yearsLabel    String      @default("CS Undergraduate")
   projectsLabel String      @default("AI/ML Projects")
