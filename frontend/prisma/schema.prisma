@@ -1,146 +1,230 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum ProjectStatus {
+  COMPLETED
+  IN_PROGRESS
+  COMING_SOON
+}
+
+enum DemoStatus {
+  HIDDEN
+  COMING_SOON
+  CASE_STUDY_ONLY
+  EXTERNAL_DEMO
+  EMBEDDED_DEMO
+}
+
+enum AchievementType {
+  AWARD
+  HACKATHON
+  COMPETITION
+  SCHOLARSHIP
+  RECOGNITION
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SiteSettings {
+  id             Int      @id @default(1)
+  siteName       String   @default("Mahir Faysal Tusher")
+  seoTitle       String   @default("Mahir Faysal Tusher | AI/ML Engineering Portfolio")
+  seoDescription String   @default("Undergraduate Computer Science student building toward AI Engineering, ML Engineering, LLM systems, and MLOps.")
+  showDemosInNav Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        Int      @id @default(autoincrement())
+  url       String
+  key       String?
+  fileName  String
+  mimeType  String
+  fileSize  Int
+  altText   String?
+  profile   Profile[]
+  projects  Project[]
+  resumes   ResumeAsset[]
+  createdAt DateTime @default(now())
 }
 
 model Profile {
-  id          Int      @id @default(autoincrement())
-  name        String
-  title       String
-  bio         String
-  summary     String   // The longer text in the About section
-  email       String
-  location    String
-  resumeUrl   String?
-  avatarUrl   String?  // For the hero section
-  aboutImage  String?  // For the about section
-  yearsOfExperience String @default("0+")
-  modelsDeployed    String @default("0+")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int         @id @default(1)
+  displayName   String      @default("Mahir Faysal Tusher")
+  role          String      @default("Undergraduate CS Student | AI/ML Engineering Path")
+  shortBio      String      @default("Undergraduate Computer Science student building practical AI systems across LLMs, machine learning, and MLOps.")
+  about         String      @default("I am building a professional foundation in AI Engineering, ML Engineering, LLM applications, and MLOps through projects, coursework, and continuous experimentation.")
+  location      String      @default("Chandpur, Bangladesh")
+  email         String      @default("www.mahirfaysaltushar@gmail.com")
+  currentFocus  String      @default("LLMs, machine learning systems, production-ready AI workflows, and MLOps foundations.")
+  yearsLabel    String      @default("CS Undergraduate")
+  projectsLabel String      @default("AI/ML Projects")
+  profileImageId Int?
+  profileImage  MediaAsset? @relation(fields: [profileImageId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
-model SocialLink {
+model Hero {
+  id             Int      @id @default(1)
+  eyebrow        String   @default("AI Engineering Portfolio")
+  headline       String   @default("Building practical AI systems from classroom foundations to production thinking.")
+  subheadline    String   @default("Undergraduate CS student focused on LLMs, machine learning, and MLOps.")
+  primaryLabel   String   @default("View Projects")
+  primaryHref    String   @default("/projects")
+  secondaryLabel String   @default("Download Resume")
+  secondaryHref  String   @default("/resume")
+  featuredChips  String   @default("[\"LLMs\",\"Machine Learning\",\"MLOps\"]")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model SkillCategory {
   id        Int      @id @default(autoincrement())
-  platform  String   // e.g., "GitHub", "LinkedIn", "Email"
-  url       String
-  icon      String   // Store the icon name from lucide-react
+  name      String   @unique
+  sortOrder Int      @default(0)
+  visible   Boolean  @default(true)
+  skills    Skill[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Skill {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
-  category    String   // e.g., "Machine Learning", "LLMs & NLP", "Data & MLOps", "Deployment"
-  proficiency Int      @default(50) // 0-100 skill proficiency level
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Experience {
-  id          Int      @id @default(autoincrement())
-  company     String
-  role        String
-  period      String   // e.g., "2022 - Present"
-  description String?  // Optional summary
-  achievements String  // Stored as JSON string or separated by newlines for now. SQLite doesn't support String[] easily without extra setup, but we can just store as a delimited string or JSON. Let's use a delimited string "||" for simplicity or just a text block.
-  techStack   String   // Comma separated or JSON
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  proficiency Int           @default(70)
+  sortOrder   Int           @default(0)
+  visible     Boolean       @default(true)
+  categoryId  Int
+  category    SkillCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   title       String
-  slug        String   @unique // Required now
+  slug        String        @unique
   description String
-  content     String   @default("") // Markdown content
-  imageUrl    String?
-  demoUrl     String?
-  repoUrl     String?
-  techStack   String   // Comma separated or JSON
-  featured    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  category    String
+  techStack   String        @default("[]")
+  imageId     Int?
+  image       MediaAsset?   @relation(fields: [imageId], references: [id])
+  githubUrl   String?
+  liveDemoUrl String?
+  caseStudyUrl String?
+  status      ProjectStatus @default(IN_PROGRESS)
+  featured    Boolean       @default(false)
+  visible     Boolean       @default(true)
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
-model NavItem {
-  id        Int      @id @default(autoincrement())
-  label     String
-  href      String
-  order     Int      @default(0)
-  visible   Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Demo {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  domain      String
+  status      DemoStatus @default(HIDDEN)
+  externalUrl String?
+  embedConfig String?
+  visible     Boolean    @default(false)
+  sortOrder   Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Experience {
+  id           Int      @id @default(autoincrement())
+  organization String
+  role         String
+  period       String
+  location     String?
+  summary      String?
+  bullets      String   @default("[]")
+  techStack    String   @default("[]")
+  visible      Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Education {
   id          Int      @id @default(autoincrement())
   degree      String
-  school      String
+  institution String
   period      String
-  details     String?  // Relevant coursework etc.
+  location    String?
+  coursework  String   @default("[]")
+  gpa         String?
+  description String?
+  visible     Boolean  @default(true)
+  sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Certification {
-  id          Int      @id @default(autoincrement())
-  name        String
-  issuer      String?
-  date        String?
-  url         String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  name          String
+  issuer        String?
+  date          String?
+  credentialUrl String?
+  visible       Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
-model User {
+model Achievement {
+  id           Int             @id @default(autoincrement())
+  title        String
+  type         AchievementType @default(RECOGNITION)
+  organization String?
+  date         String?
+  description  String?
+  url          String?
+  visible      Boolean         @default(false)
+  sortOrder    Int             @default(0)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model ResumeAsset {
+  id              Int       @id @default(1)
+  mediaId         Int?
+  media           MediaAsset? @relation(fields: [mediaId], references: [id])
+  highlights      String    @default("[]")
+  lastUpdatedDate String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model SocialLink {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
-  password  String   // Hashed password
-  role      String   @default("admin") // admin or user for future expansion
+  label     String
+  platform  String
+  url       String
+  visible   Boolean  @default(true)
+  sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-// === NEW MODELS FOR PHASE 2 ===
-
-model Testimonial {
-  id          Int      @id @default(autoincrement())
-  name        String   // Person's name
-  role        String   // Their job title
-  company     String   // Company they work at
-  content     String   // The testimonial text
-  avatarUrl   String?  // Profile picture URL
-  linkedinUrl String?  // Link to their LinkedIn profile
-  featured    Boolean  @default(false)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model BlogPost {
-  id          Int      @id @default(autoincrement())
-  title       String
-  slug        String   @unique
-  excerpt     String   // Short description for listings
-  content     String   // Full markdown content
-  coverImage  String?  // Cover image URL
-  tags        String   // JSON array of tags
-  published   Boolean  @default(false)
-  publishedAt DateTime?
-  readTime    Int      @default(5) // Estimated reading time in minutes
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model ContactSubmission {
@@ -149,35 +233,6 @@ model ContactSubmission {
   email     String
   message   String
   read      Boolean  @default(false)
+  archived  Boolean  @default(false)
   createdAt DateTime @default(now())
-}
-
-// === PHASE 3: RESEARCH & ACHIEVEMENTS ===
-
-model Publication {
-  id          Int      @id @default(autoincrement())
-  title       String
-  authors     String   // Comma-separated author names
-  venue       String   // Conference/journal name
-  year        Int
-  abstract    String?  // Paper abstract
-  url         String?  // Link to paper
-  doi         String?  // Digital Object Identifier
-  type        String   @default("preprint") // conference, journal, preprint, thesis
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Achievement {
-  id           Int      @id @default(autoincrement())
-  title        String
-  organization String   // Awarding body
-  year         Int
-  description  String?
-  url          String?  // Link to details
-  type         String   @default("recognition") // award, competition, scholarship, recognition
-  order        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
 }
