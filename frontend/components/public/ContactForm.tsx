@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Send } from 'lucide-react';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -41,7 +42,14 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass-panel space-y-4 rounded-lg p-5">
+    <form onSubmit={handleSubmit} className="contact-form-panel space-y-4">
+      <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.24em] text-cyan-200">Direct message</p>
+          <p className="mt-1 text-sm text-slate-400">Saved privately for review.</p>
+        </div>
+        <Send className="h-5 w-5 text-emerald-200" />
+      </div>
       <input
         type="text"
         name="company"
@@ -58,7 +66,7 @@ export default function ContactForm() {
           required
           minLength={2}
           maxLength={120}
-          className="mt-1 w-full rounded-md border border-cyan-200/15 bg-slate-950/80 px-3 py-2 text-white outline-none transition focus:border-cyan-300"
+          className="mt-1 w-full rounded-md border border-cyan-200/15 bg-slate-950/80 px-3 py-3 text-white outline-none transition focus:border-cyan-300"
         />
       </label>
       <label className="block">
@@ -69,7 +77,7 @@ export default function ContactForm() {
           autoComplete="email"
           required
           maxLength={180}
-          className="mt-1 w-full rounded-md border border-cyan-200/15 bg-slate-950/80 px-3 py-2 text-white outline-none transition focus:border-cyan-300"
+          className="mt-1 w-full rounded-md border border-cyan-200/15 bg-slate-950/80 px-3 py-3 text-white outline-none transition focus:border-cyan-300"
         />
       </label>
       <label className="block">
@@ -80,7 +88,7 @@ export default function ContactForm() {
           minLength={10}
           maxLength={5000}
           rows={5}
-          className="mt-1 w-full resize-y rounded-md border border-cyan-200/15 bg-slate-950/80 px-3 py-2 text-white outline-none transition focus:border-cyan-300"
+          className="mt-1 w-full resize-y rounded-md border border-cyan-200/15 bg-slate-950/80 px-3 py-3 text-white outline-none transition focus:border-cyan-300"
         />
       </label>
       {message ? (
@@ -95,9 +103,10 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="rounded-md bg-cyan-300 px-5 py-2 font-medium text-slate-950 transition-colors hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center justify-center gap-2 rounded-md bg-cyan-300 px-5 py-3 font-medium text-slate-950 transition-colors hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === 'loading' ? 'Sending...' : 'Send message'}
+        <Send className="h-4 w-4" />
       </button>
     </form>
   );

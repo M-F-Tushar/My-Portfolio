@@ -1,4 +1,18 @@
 import Link from 'next/link';
+import {
+  ArrowUpRight,
+  BrainCircuit,
+  BriefcaseBusiness,
+  Cpu,
+  GitBranch,
+  GraduationCap,
+  Layers3,
+  LineChart,
+  Rocket,
+  ShieldCheck,
+  Sparkles,
+  Target,
+} from 'lucide-react';
 import { prisma } from '@/lib/db';
 import { parseStringArray } from '@/lib/content/json';
 import { hasDatabaseUrl } from '@/lib/env';
@@ -21,13 +35,13 @@ const fallbackProfile = {
 
 const fallbackHero = {
   eyebrow: 'AI Engineering Portfolio',
-  headline: 'Building practical AI systems from classroom foundations to production thinking.',
-  subheadline: 'Undergraduate CS student focused on LLMs, machine learning, and MLOps.',
+  headline: 'AI / ML Engineering',
+  subheadline: 'Undergraduate CS student focused on LLM apps, machine learning systems, and MLOps foundations.',
   primaryLabel: 'View Projects',
   primaryHref: '/projects',
   secondaryLabel: 'Preview Resume',
   secondaryHref: '/resume',
-  featuredChips: '["LLMs","Machine Learning","MLOps"]',
+  featuredChips: '["LLM Apps","Machine Learning","MLOps","RAG","Python"]',
 };
 
 const fallbackProjects: ProjectCardProject[] = [
@@ -52,6 +66,46 @@ const fallbackProjects: ProjectCardProject[] = [
     caseStudyUrl: null,
     githubUrl: null,
     liveDemoUrl: null,
+  },
+];
+
+const candidateSignals = [
+  { label: 'Direction', value: 'AI Engineering', icon: BrainCircuit },
+  { label: 'Strength', value: 'ML Systems', icon: Cpu },
+  { label: 'Production focus', value: 'MLOps', icon: GitBranch },
+  { label: 'Output', value: 'Projects + Resume', icon: ShieldCheck },
+];
+
+const fallbackExperienceTimeline = [
+  {
+    period: 'Current',
+    role: 'AI/ML portfolio builder',
+    organization: 'Project-based learning',
+    summary: 'Building employer-facing projects around LLM apps, model evaluation, and deployment workflows.',
+  },
+  {
+    period: 'Next',
+    role: 'Internship-ready engineering path',
+    organization: 'Applied AI systems',
+    summary: 'Preparing practical demos, case-study links, and measurable project outcomes for technical review.',
+  },
+];
+
+const fallbackEducationTimeline = [
+  {
+    period: 'Foundation',
+    degree: 'Computer Science fundamentals',
+    institution: 'Programming, data structures, algorithms, databases, and software engineering.',
+  },
+  {
+    period: 'Specialization',
+    degree: 'AI/ML engineering track',
+    institution: 'Machine learning, LLM applications, MLOps foundations, evaluation, and deployment thinking.',
+  },
+  {
+    period: 'Professional proof',
+    degree: 'Portfolio + resume evidence',
+    institution: 'Projects, certifications, achievements, and hackathons become public when ready.',
   },
 ];
 
@@ -126,6 +180,14 @@ async function loadHomeData() {
 export default async function HomePage() {
   const data = await loadHomeData();
   const chips = parseStringArray(data.hero.featuredChips);
+  const heroTags = chips.length ? chips : ['LLM Apps', 'Machine Learning', 'MLOps'];
+  const experienceTimeline = data.experience.length ? data.experience : fallbackExperienceTimeline;
+  const educationTimeline = data.education.length ? data.education : fallbackEducationTimeline;
+  const aboutSignals = [
+    { label: 'Role', value: data.profile.role, icon: BriefcaseBusiness },
+    { label: 'Location', value: data.profile.location, icon: Target },
+    { label: 'Focus', value: data.profile.currentFocus, icon: Sparkles },
+  ];
 
   return (
     <div className="cinematic-shell">
@@ -137,9 +199,22 @@ export default async function HomePage() {
             <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">{data.hero.eyebrow}</p>
             <h1 className="mt-5 max-w-5xl text-5xl font-black leading-[0.95] tracking-tight text-white md:text-7xl">
               {data.profile.displayName}
-              <span className="block text-gradient">{data.hero.headline}</span>
+              <span className="block text-gradient">AI / ML Engineering</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">{data.hero.subheadline}</p>
+            <div className="mt-7 grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {candidateSignals.map((signal) => {
+                const Icon = signal.icon;
+
+                return (
+                  <div key={signal.label} className="signal-tile group">
+                    <Icon className="h-4 w-4 text-cyan-200 transition group-hover:scale-110" />
+                    <span className="text-[0.65rem] uppercase tracking-[0.2em] text-slate-500">{signal.label}</span>
+                    <strong className="text-sm text-white">{signal.value}</strong>
+                  </div>
+                );
+              })}
+            </div>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href={data.hero.primaryHref || '/projects'} className="rounded-md bg-cyan-300 px-5 py-3 font-medium text-slate-950 transition-colors hover:bg-cyan-200">
                 {data.hero.primaryLabel || 'View Projects'}
@@ -149,8 +224,8 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="mt-8 flex flex-wrap gap-2">
-              {chips.map((chip) => (
-                <span key={chip} className="rounded-md border border-cyan-200/20 px-3 py-1 text-sm text-cyan-100">
+              {heroTags.map((chip) => (
+                <span key={chip} className="rounded-md border border-cyan-200/20 bg-cyan-200/8 px-3 py-1 text-sm text-cyan-100">
                   {chip}
                 </span>
               ))}
@@ -158,27 +233,63 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <SectionReveal className="container-wide py-20">
-          <p className="text-sm uppercase tracking-[0.28em] text-emerald-200">About</p>
-          <h2 className="mt-3 text-3xl font-semibold text-white">A computer science foundation aimed at production AI.</h2>
-          <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{data.profile.about}</p>
-          <div className="mt-6 grid gap-3 text-sm text-slate-300 md:grid-cols-3">
-            <span className="glass-panel rounded-lg p-3">{data.profile.role}</span>
-            <span className="glass-panel rounded-lg p-3">{data.profile.location}</span>
-            <span className="glass-panel rounded-lg p-3">{data.profile.currentFocus}</span>
+        <SectionReveal id="about" className="container-wide py-20">
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <p className="text-sm uppercase tracking-[0.28em] text-emerald-200">About</p>
+              <h2 className="mt-3 max-w-2xl text-4xl font-semibold leading-tight text-white md:text-5xl">
+                Candidate signal for AI, ML, and production-minded systems.
+              </h2>
+              <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">{data.profile.about}</p>
+            </div>
+            <div className="evidence-board">
+              <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-cyan-200">Evaluator snapshot</p>
+                  <p className="mt-1 text-sm text-slate-400">Fast scan of fit, focus, and career direction.</p>
+                </div>
+                <LineChart className="h-5 w-5 text-emerald-200" />
+              </div>
+              <div className="grid gap-px bg-white/10 sm:grid-cols-3">
+                {aboutSignals.map((signal) => {
+                  const Icon = signal.icon;
+
+                  return (
+                    <div key={signal.label} className="bg-slate-950/78 p-5">
+                      <Icon className="h-5 w-5 text-cyan-200" />
+                      <p className="mt-4 text-xs uppercase tracking-[0.2em] text-slate-500">{signal.label}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-100">{signal.value}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </SectionReveal>
 
-        <SectionReveal className="container-wide py-20">
-          <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Skills</p>
-          <h2 className="mt-3 text-3xl font-semibold text-white">AI, ML, and software systems toolkit.</h2>
+        <SectionReveal id="skills" className="container-wide py-20">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Skills</p>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Skill map for AI engineering roles.</h2>
+            </div>
+            <p className="max-w-md text-sm leading-6 text-slate-400">
+              Each cluster is designed to communicate interview-ready direction, not just a list of tools.
+            </p>
+          </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {data.skillCategories.map((category) => (
-              <div key={category.id} className="glass-panel rounded-lg p-5 transition hover:border-cyan-200/35">
-                <h3 className="font-semibold text-cyan-100">{category.name}</h3>
+              <div key={category.id} className="skill-panel group">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-semibold text-cyan-100">{category.name}</h3>
+                  <Sparkles className="h-4 w-4 text-emerald-200 opacity-70 transition group-hover:opacity-100" />
+                </div>
+                <div className="mt-5 h-1.5 overflow-hidden rounded-lg bg-white/8">
+                  <div className="h-full w-4/5 rounded-lg bg-gradient-to-r from-cyan-300 to-emerald-300" />
+                </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {category.skills.map((skill) => (
-                    <span key={skill.id} className="rounded-md bg-white/5 px-2 py-1 text-xs text-slate-200">
+                    <span key={skill.id} className="rounded-md border border-cyan-200/10 bg-cyan-200/8 px-2 py-1 text-xs text-slate-200 transition group-hover:border-cyan-200/25">
                       {skill.name}
                     </span>
                   ))}
@@ -188,14 +299,17 @@ export default async function HomePage() {
           </div>
         </SectionReveal>
 
-        <SectionReveal className="container-wide py-20">
+        <SectionReveal id="featured-projects" className="container-wide py-20">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Featured Projects</p>
-              <h2 className="mt-3 text-3xl font-semibold text-white">Practical work with employer-readable signal.</h2>
-              <p className="mt-2 text-slate-400">Selected projects showing AI, ML, and engineering growth.</p>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Project evidence, not just project names.</h2>
+              <p className="mt-2 text-slate-400">Each card highlights domain, stack, status, and follow-up links for technical review.</p>
             </div>
-            <Link href="/projects" className="text-sm text-cyan-200 hover:text-white">View all projects</Link>
+            <Link href="/projects" className="inline-flex items-center gap-2 text-sm text-cyan-200 hover:text-white">
+              View all projects
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
           </div>
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {data.projects.map((project) => (
@@ -204,40 +318,69 @@ export default async function HomePage() {
           </div>
         </SectionReveal>
 
-        <SectionReveal className="container-wide py-20">
-          <p className="text-sm uppercase tracking-[0.28em] text-emerald-200">Experience</p>
-          <h2 className="mt-3 text-3xl font-semibold text-white">Applied learning and professional momentum.</h2>
-          <div className="mt-8 space-y-4">
-            {data.experience.length ? data.experience.map((item) => (
-              <div key={item.id} className="glass-panel rounded-lg p-5">
-                <p className="text-sm text-cyan-200">{item.period}</p>
-                <h3 className="mt-2 text-xl font-semibold text-white">{item.role}</h3>
-                <p className="text-slate-300">{item.organization}</p>
-                {item.summary ? <p className="mt-3 text-slate-400">{item.summary}</p> : null}
-              </div>
-            )) : (
-              <p className="text-slate-400">Experience entries can be added from the admin panel when ready.</p>
-            )}
+        <SectionReveal id="experience" className="container-wide py-20">
+          <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr]">
+            <div>
+              <p className="text-sm uppercase tracking-[0.28em] text-emerald-200">Experience</p>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">A progress timeline employers can scan.</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-400">
+                Built to show momentum from learning to applied AI systems work.
+              </p>
+            </div>
+            <div className="timeline-list">
+              {experienceTimeline.map((item, index) => (
+                <div key={`${item.role}-${item.period}`} className="timeline-item">
+                  <div className="timeline-node">{String(index + 1).padStart(2, '0')}</div>
+                  <div className="timeline-content">
+                    <p className="text-sm text-cyan-200">{item.period}</p>
+                    <h3 className="mt-2 text-xl font-semibold text-white">{item.role}</h3>
+                    <p className="text-slate-300">{item.organization}</p>
+                    {item.summary ? <p className="mt-3 text-sm leading-6 text-slate-400">{item.summary}</p> : null}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </SectionReveal>
 
-        <SectionReveal className="container-wide py-20">
-          <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Education</p>
-          <h2 className="mt-3 text-3xl font-semibold text-white">Education and certification signal.</h2>
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {data.education.map((item) => (
-              <div key={item.id} className="glass-panel rounded-lg p-5">
-                <h3 className="text-xl font-semibold text-white">{item.degree}</h3>
-                <p className="mt-2 text-slate-300">{item.institution}</p>
-                <p className="text-sm text-cyan-200">{item.period}</p>
-              </div>
-            ))}
-            {data.certifications.map((item) => (
-              <div key={item.id} className="glass-panel rounded-lg p-5">
-                <h3 className="text-xl font-semibold text-white">{item.name}</h3>
-                {item.issuer ? <p className="mt-2 text-slate-300">{item.issuer}</p> : null}
-              </div>
-            ))}
+        <SectionReveal id="education" className="container-wide py-20">
+          <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr]">
+            <div>
+              <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Education</p>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Education path from CS core to AI focus.</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-400">
+                A beginning-to-current timeline makes the candidate path easier to understand.
+              </p>
+            </div>
+            <div className="timeline-list">
+              {educationTimeline.map((item, index) => (
+                <div key={`${item.degree}-${item.period}`} className="timeline-item">
+                  <div className="timeline-node">
+                    <GraduationCap className="h-4 w-4" />
+                  </div>
+                  <div className="timeline-content">
+                    <p className="text-sm text-cyan-200">{item.period}</p>
+                    <h3 className="mt-2 text-xl font-semibold text-white">{item.degree}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">{item.institution}</p>
+                    {'gpa' in item && typeof item.gpa === 'string' && item.gpa ? (
+                      <p className="mt-2 text-sm text-emerald-200">GPA: {item.gpa}</p>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+              {data.certifications.map((item) => (
+                <div key={item.id} className="timeline-item">
+                  <div className="timeline-node">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <div className="timeline-content">
+                    <p className="text-sm text-emerald-200">{item.date ?? 'Certification'}</p>
+                    <h3 className="mt-2 text-xl font-semibold text-white">{item.name}</h3>
+                    {item.issuer ? <p className="mt-2 text-sm text-slate-300">{item.issuer}</p> : null}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </SectionReveal>
 
@@ -257,20 +400,37 @@ export default async function HomePage() {
           </SectionReveal>
         ) : null}
 
-        <SectionReveal id="contact" className="container-wide grid gap-8 py-20 md:grid-cols-[0.8fr_1.2fr]">
-          <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Contact</p>
-            <h2 className="mt-3 text-3xl font-semibold text-white">Open to internships, research, and AI project work.</h2>
-            <p className="mt-4 text-slate-300">Messages are saved privately in the admin panel for review.</p>
-            <div className="mt-6 space-y-2 text-sm text-slate-300">
-              {data.socials.map((social) => (
-                <Link key={social.id} href={social.url} className="block text-cyan-200 hover:text-white">
-                  {social.label}
-                </Link>
-              ))}
+        <SectionReveal id="contact" className="container-wide py-20">
+          <div className="contact-band">
+            <div>
+              <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Contact</p>
+              <h2 className="mt-3 text-4xl font-semibold leading-tight text-white md:text-5xl">
+                Open to internships, research, and AI project work.
+              </h2>
+              <p className="mt-4 max-w-xl text-slate-300">Messages are saved privately in the admin panel for review.</p>
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {[
+                  { label: 'Availability', value: 'Internship' },
+                  { label: 'Direction', value: 'AI/ML' },
+                  { label: 'Response', value: 'Private inbox' },
+                ].map((item) => (
+                  <div key={item.label} className="rounded-lg border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">{item.label}</p>
+                    <p className="mt-2 text-sm font-semibold text-cyan-100">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 space-y-2 text-sm text-slate-300">
+                {data.socials.map((social) => (
+                  <Link key={social.id} href={social.url} className="inline-flex items-center gap-2 text-cyan-200 hover:text-white">
+                    {social.label}
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </Link>
+                ))}
+              </div>
             </div>
+            <ContactForm />
           </div>
-          <ContactForm />
         </SectionReveal>
       </main>
     </div>
