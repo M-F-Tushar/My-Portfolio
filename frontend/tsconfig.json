@@ -31,9 +31,6 @@
             "@/components/*": [
                 "./components/*"
             ],
-            "@/pages/*": [
-                "./pages/*"
-            ],
             "@/styles/*": [
                 "./styles/*"
             ]
@@ -45,6 +42,8 @@
         "**/*.tsx"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        ".next",
+        "_legacy"
     ]
 }

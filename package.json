@@ -31,7 +31,7 @@
     "type": "git",
     "url": "https://github.com/M-F-Tushar/My-Portfolio"
   },
-  "keywords": [
+    "keywords": [
     "ai",
     "ml",
     "portfolio",
@@ -39,7 +39,7 @@
     "rag",
     "agent",
     "nextjs",
-    "fastapi"
+    "vercel"
   ],
   "author": "Mahir Faysal Tusher",
   "license": "MIT"

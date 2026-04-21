@@ -3,7 +3,7 @@ const nextConfig = {
     reactStrictMode: true,
     eslint: {
         ignoreDuringBuilds: false,
-        dirs: ['pages', 'components', 'lib', 'hooks'],
+        dirs: ['app', 'components', 'lib'],
     },
     async headers() {
         return [
@@ -59,19 +59,6 @@ const nextConfig = {
                         ].join('; ')
                     }
                 ],
-            },
-        ];
-    },
-
-    async rewrites() {
-        return [
-            {
-                source: '/sitemap.xml',
-                destination: '/api/sitemap.xml',
-            },
-            {
-                source: '/robots.txt',
-                destination: '/api/robots.txt',
             },
         ];
     },
