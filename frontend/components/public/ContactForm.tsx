@@ -23,6 +23,7 @@ export default function ContactForm() {
         name: formData.get('name'),
         email: formData.get('email'),
         message: formData.get('message'),
+        company: formData.get('company'),
       }),
     });
 
@@ -41,6 +42,14 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="glass-panel space-y-4 rounded-lg p-5">
+      <input
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+        aria-hidden="true"
+      />
       <label className="block">
         <span className="text-sm text-slate-300">Name</span>
         <input
