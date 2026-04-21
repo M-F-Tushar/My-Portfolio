@@ -4,20 +4,22 @@ import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 interface SectionRevealProps {
+    id?: string;
     children: ReactNode;
     className?: string;
     delay?: number;
 }
 
-export default function SectionReveal({ children, className, delay = 0 }: SectionRevealProps) {
+export default function SectionReveal({ id, children, className, delay = 0 }: SectionRevealProps) {
     const prefersReducedMotion = useReducedMotion();
 
     if (prefersReducedMotion) {
-        return <div className={className}>{children}</div>;
+        return <section id={id} className={className}>{children}</section>;
     }
 
     return (
-        <motion.div
+        <motion.section
+            id={id}
             className={className}
             initial={{ opacity: 0, y: 18, filter: 'blur(8px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -29,6 +31,6 @@ export default function SectionReveal({ children, className, delay = 0 }: Sectio
             }}
         >
             {children}
-        </motion.div>
+        </motion.section>
     );
 }
