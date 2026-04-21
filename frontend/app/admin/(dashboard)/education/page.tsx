@@ -31,7 +31,7 @@ async function createEducation(formData: FormData) {
 
     await requireAdmin();
     await prisma.education.create({ data: readEducationData(formData) });
-    revalidateAdminPaths('/admin/education');
+    revalidateAdminPaths('/admin/education', ['/']);
 }
 
 async function updateEducation(formData: FormData) {
@@ -39,7 +39,7 @@ async function updateEducation(formData: FormData) {
 
     await requireAdmin();
     await prisma.education.update({ where: { id: requiredId(formData) }, data: readEducationData(formData) });
-    revalidateAdminPaths('/admin/education');
+    revalidateAdminPaths('/admin/education', ['/']);
 }
 
 async function deleteEducation(formData: FormData) {
@@ -47,7 +47,7 @@ async function deleteEducation(formData: FormData) {
 
     await requireAdmin();
     await prisma.education.delete({ where: { id: requiredId(formData) } });
-    revalidateAdminPaths('/admin/education');
+    revalidateAdminPaths('/admin/education', ['/']);
 }
 
 export default async function AdminEducationPage() {

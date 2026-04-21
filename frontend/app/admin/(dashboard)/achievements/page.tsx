@@ -41,7 +41,7 @@ async function createAchievement(formData: FormData) {
 
     await requireAdmin();
     await prisma.achievement.create({ data: readAchievementData(formData) });
-    revalidateAdminPaths('/admin/achievements');
+    revalidateAdminPaths('/admin/achievements', ['/']);
 }
 
 async function updateAchievement(formData: FormData) {
@@ -49,7 +49,7 @@ async function updateAchievement(formData: FormData) {
 
     await requireAdmin();
     await prisma.achievement.update({ where: { id: requiredId(formData) }, data: readAchievementData(formData) });
-    revalidateAdminPaths('/admin/achievements');
+    revalidateAdminPaths('/admin/achievements', ['/']);
 }
 
 async function deleteAchievement(formData: FormData) {
@@ -57,7 +57,7 @@ async function deleteAchievement(formData: FormData) {
 
     await requireAdmin();
     await prisma.achievement.delete({ where: { id: requiredId(formData) } });
-    revalidateAdminPaths('/admin/achievements');
+    revalidateAdminPaths('/admin/achievements', ['/']);
 }
 
 export default async function AdminAchievementsPage() {

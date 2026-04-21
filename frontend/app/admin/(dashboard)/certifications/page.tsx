@@ -26,7 +26,7 @@ async function createCertification(formData: FormData) {
 
     await requireAdmin();
     await prisma.certification.create({ data: readCertificationData(formData) });
-    revalidateAdminPaths('/admin/certifications');
+    revalidateAdminPaths('/admin/certifications', ['/']);
 }
 
 async function updateCertification(formData: FormData) {
@@ -34,7 +34,7 @@ async function updateCertification(formData: FormData) {
 
     await requireAdmin();
     await prisma.certification.update({ where: { id: requiredId(formData) }, data: readCertificationData(formData) });
-    revalidateAdminPaths('/admin/certifications');
+    revalidateAdminPaths('/admin/certifications', ['/']);
 }
 
 async function deleteCertification(formData: FormData) {
@@ -42,7 +42,7 @@ async function deleteCertification(formData: FormData) {
 
     await requireAdmin();
     await prisma.certification.delete({ where: { id: requiredId(formData) } });
-    revalidateAdminPaths('/admin/certifications');
+    revalidateAdminPaths('/admin/certifications', ['/']);
 }
 
 export default async function AdminCertificationsPage() {

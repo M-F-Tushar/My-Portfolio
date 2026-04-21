@@ -25,7 +25,7 @@ async function saveHero(formData: FormData) {
         create: { id: 1, ...data },
     });
 
-    revalidateAdminPaths('/admin/hero');
+    revalidateAdminPaths('/admin/hero', ['/']);
 }
 
 export default async function AdminHeroPage() {

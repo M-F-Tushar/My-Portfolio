@@ -31,7 +31,7 @@ async function createExperience(formData: FormData) {
 
     await requireAdmin();
     await prisma.experience.create({ data: readExperienceData(formData) });
-    revalidateAdminPaths('/admin/experience');
+    revalidateAdminPaths('/admin/experience', ['/']);
 }
 
 async function updateExperience(formData: FormData) {
@@ -39,7 +39,7 @@ async function updateExperience(formData: FormData) {
 
     await requireAdmin();
     await prisma.experience.update({ where: { id: requiredId(formData) }, data: readExperienceData(formData) });
-    revalidateAdminPaths('/admin/experience');
+    revalidateAdminPaths('/admin/experience', ['/']);
 }
 
 async function deleteExperience(formData: FormData) {
@@ -47,7 +47,7 @@ async function deleteExperience(formData: FormData) {
 
     await requireAdmin();
     await prisma.experience.delete({ where: { id: requiredId(formData) } });
-    revalidateAdminPaths('/admin/experience');
+    revalidateAdminPaths('/admin/experience', ['/']);
 }
 
 export default async function AdminExperiencePage() {

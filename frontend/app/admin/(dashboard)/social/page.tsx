@@ -24,7 +24,7 @@ async function createSocialLink(formData: FormData) {
 
     await requireAdmin();
     await prisma.socialLink.create({ data: readSocialLinkData(formData) });
-    revalidateAdminPaths('/admin/social');
+    revalidateAdminPaths('/admin/social', ['/']);
 }
 
 async function updateSocialLink(formData: FormData) {
@@ -32,7 +32,7 @@ async function updateSocialLink(formData: FormData) {
 
     await requireAdmin();
     await prisma.socialLink.update({ where: { id: requiredId(formData) }, data: readSocialLinkData(formData) });
-    revalidateAdminPaths('/admin/social');
+    revalidateAdminPaths('/admin/social', ['/']);
 }
 
 async function deleteSocialLink(formData: FormData) {
@@ -40,7 +40,7 @@ async function deleteSocialLink(formData: FormData) {
 
     await requireAdmin();
     await prisma.socialLink.delete({ where: { id: requiredId(formData) } });
-    revalidateAdminPaths('/admin/social');
+    revalidateAdminPaths('/admin/social', ['/']);
 }
 
 export default async function AdminSocialPage() {

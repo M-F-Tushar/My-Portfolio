@@ -25,7 +25,7 @@ async function createCategory(formData: FormData) {
         },
     });
 
-    revalidateAdminPaths('/admin/skills');
+    revalidateAdminPaths('/admin/skills', ['/']);
 }
 
 async function updateCategory(formData: FormData) {
@@ -42,7 +42,7 @@ async function updateCategory(formData: FormData) {
         },
     });
 
-    revalidateAdminPaths('/admin/skills');
+    revalidateAdminPaths('/admin/skills', ['/']);
 }
 
 async function deleteCategory(formData: FormData) {
@@ -50,7 +50,7 @@ async function deleteCategory(formData: FormData) {
 
     await requireAdmin();
     await prisma.skillCategory.delete({ where: { id: requiredId(formData) } });
-    revalidateAdminPaths('/admin/skills');
+    revalidateAdminPaths('/admin/skills', ['/']);
 }
 
 async function createSkill(formData: FormData) {
@@ -68,7 +68,7 @@ async function createSkill(formData: FormData) {
         },
     });
 
-    revalidateAdminPaths('/admin/skills');
+    revalidateAdminPaths('/admin/skills', ['/']);
 }
 
 async function updateSkill(formData: FormData) {
@@ -87,7 +87,7 @@ async function updateSkill(formData: FormData) {
         },
     });
 
-    revalidateAdminPaths('/admin/skills');
+    revalidateAdminPaths('/admin/skills', ['/']);
 }
 
 async function deleteSkill(formData: FormData) {
@@ -95,7 +95,7 @@ async function deleteSkill(formData: FormData) {
 
     await requireAdmin();
     await prisma.skill.delete({ where: { id: requiredId(formData) } });
-    revalidateAdminPaths('/admin/skills');
+    revalidateAdminPaths('/admin/skills', ['/']);
 }
 
 export default async function AdminSkillsPage() {
