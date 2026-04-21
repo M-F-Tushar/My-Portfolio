@@ -11,7 +11,7 @@ interface ResourceRouteContext {
 
 export async function GET(_request: Request, { params }: ResourceRouteContext) {
     try {
-        await requireAdmin();
+        await requireAdmin({ redirectToLogin: false });
     } catch {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

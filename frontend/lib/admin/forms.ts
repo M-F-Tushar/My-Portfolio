@@ -35,17 +35,21 @@ export function stringWithDefault(formData: FormData, name: string, fallback: st
 export function intWithDefault(formData: FormData, name: string, fallback = 0) {
     const value = formData.get(name);
 
-    if (typeof value !== 'string' || !value.trim()) {
+    if (typeof value !== 'string') {
         return fallback;
     }
 
-    const parsed = Number.parseInt(value, 10);
+    const trimmed = value.trim();
 
-    if (!Number.isInteger(parsed)) {
+    if (!trimmed) {
+        return fallback;
+    }
+
+    if (!/^-?\d+$/.test(trimmed)) {
         throw new Error(`${name} must be a whole number.`);
     }
 
-    return parsed;
+    return Number.parseInt(trimmed, 10);
 }
 
 export function requiredId(formData: FormData) {

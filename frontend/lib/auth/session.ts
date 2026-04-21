@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose';
+import { redirect } from 'next/navigation';
 import { env } from '@/lib/env';
 
 export const SESSION_COOKIE = 'portfolio_admin_session';
@@ -69,10 +70,18 @@ export async function getCurrentAdmin(sessionToken?: string): Promise<AdminSessi
     return verifyAdminSession(token);
 }
 
-export async function requireAdmin(): Promise<AdminSession> {
+interface RequireAdminOptions {
+    redirectToLogin?: boolean;
+}
+
+export async function requireAdmin(options: RequireAdminOptions = {}): Promise<AdminSession> {
     const session = await getCurrentAdmin();
 
     if (!session) {
+        if (options.redirectToLogin !== false) {
+            redirect('/admin/login');
+        }
+
         throw new Error('Unauthorized');
     }
 
