@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { prisma } from '@/lib/db';
-import { env } from '@/lib/env';
+import { env, hasDatabaseUrl } from '@/lib/env';
 import './globals.css';
 
 async function getSiteMetadata() {
+    if (!hasDatabaseUrl()) {
+        return null;
+    }
+
     try {
         return await prisma.siteSettings.findUnique({
             where: { id: 1 },

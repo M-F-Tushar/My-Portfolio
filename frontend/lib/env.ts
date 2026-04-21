@@ -11,10 +11,19 @@ export function getRequiredEnv(name: (typeof requiredServerVars)[number] | 'DIRE
 
 export const env = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-  jwtSecret: isLocalDevelopment ? getRequiredEnv('JWT_SECRET') || 'local-development-secret-change-me' : getRequiredEnv('JWT_SECRET'),
   csrfSecret: process.env.CSRF_SECRET || 'local-development-csrf-change-me',
   blobToken: process.env.BLOB_READ_WRITE_TOKEN || '',
   resendApiKey: process.env.RESEND_API_KEY || '',
   resendFromEmail: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
   resendToEmail: process.env.RESEND_TO_EMAIL || '',
 };
+
+export function getJwtSecret() {
+  return isLocalDevelopment
+    ? getRequiredEnv('JWT_SECRET') || 'local-development-secret-change-me'
+    : getRequiredEnv('JWT_SECRET');
+}
+
+export function hasDatabaseUrl() {
+  return Boolean(process.env.DATABASE_URL);
+}

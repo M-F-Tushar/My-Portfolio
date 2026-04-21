@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 import { parseStringArray } from '@/lib/content/json';
+import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import SectionReveal from '@/components/public/SectionReveal';
 
@@ -41,6 +42,21 @@ function formatFileSize(bytes: number | null) {
 }
 
 async function loadResumePageData(): Promise<ResumePageState> {
+    if (!hasDatabaseUrl()) {
+        return {
+            displayName: 'Portfolio resume',
+            role: 'Professional summary',
+            summary: 'The resume asset could not be loaded right now.',
+            resumeUrl: null,
+            fileName: null,
+            mimeType: null,
+            fileSize: null,
+            lastUpdatedDate: null,
+            highlights: [],
+            loadingIssue: true,
+        };
+    }
+
     try {
         const [profile, resumeAsset] = await Promise.all([
             prisma.profile.findUnique({

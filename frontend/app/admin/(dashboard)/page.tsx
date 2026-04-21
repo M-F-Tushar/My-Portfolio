@@ -73,7 +73,7 @@ export default async function AdminDashboardPage() {
                     Admin control room
                 </h1>
                 <p className="max-w-3xl text-sm leading-6 text-slate-400">
-                    A quick read on the portfolio's public visibility, featured content, and the inbox state.
+                    A quick read on the portfolio public visibility, featured content, and the inbox state.
                 </p>
             </section>
 

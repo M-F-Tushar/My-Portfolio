@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
+import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import SectionReveal from '@/components/public/SectionReveal';
 
@@ -23,6 +24,13 @@ function formatStatusLabel(status: string) {
 }
 
 async function loadDemosPageData(): Promise<DemoPageState> {
+    if (!hasDatabaseUrl()) {
+        return {
+            demos: [],
+            loadingIssue: true,
+        };
+    }
+
     try {
         const demos = await prisma.demo.findMany({
             where: {

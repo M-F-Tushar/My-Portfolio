@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
+import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import SectionReveal from '@/components/public/SectionReveal';
 import ProjectCard, { type ProjectCardProject } from '@/components/public/ProjectCard';
@@ -14,6 +15,13 @@ type ProjectsPageState = {
 };
 
 async function loadProjectsPageData(): Promise<ProjectsPageState> {
+    if (!hasDatabaseUrl()) {
+        return {
+            projects: [],
+            loadingIssue: true,
+        };
+    }
+
     try {
         const projects = await prisma.project.findMany({
             where: { visible: true },

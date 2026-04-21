@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 import { parseStringArray } from '@/lib/content/json';
+import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import HeroVisual from '@/components/public/HeroVisual';
 import SectionReveal from '@/components/public/SectionReveal';
@@ -55,6 +56,26 @@ const fallbackProjects: ProjectCardProject[] = [
 ];
 
 async function loadHomeData() {
+  const fallbackData = {
+    profile: fallbackProfile,
+    hero: fallbackHero,
+    skillCategories: [
+      { id: 1, name: 'AI and LLMs', skills: [{ id: 1, name: 'LLM Fundamentals' }, { id: 2, name: 'RAG Concepts' }] },
+      { id: 2, name: 'Machine Learning', skills: [{ id: 3, name: 'Python' }, { id: 4, name: 'Model Evaluation' }] },
+      { id: 3, name: 'MLOps Foundations', skills: [{ id: 5, name: 'Experiment Tracking' }, { id: 6, name: 'Deployment Basics' }] },
+    ],
+    projects: fallbackProjects,
+    experience: [],
+    education: [],
+    certifications: [],
+    achievements: [],
+    socials: [],
+  };
+
+  if (!hasDatabaseUrl()) {
+    return fallbackData;
+  }
+
   try {
     const [
       profile,
@@ -98,21 +119,7 @@ async function loadHomeData() {
       socials,
     };
   } catch {
-    return {
-      profile: fallbackProfile,
-      hero: fallbackHero,
-      skillCategories: [
-        { id: 1, name: 'AI and LLMs', skills: [{ id: 1, name: 'LLM Fundamentals' }, { id: 2, name: 'RAG Concepts' }] },
-        { id: 2, name: 'Machine Learning', skills: [{ id: 3, name: 'Python' }, { id: 4, name: 'Model Evaluation' }] },
-        { id: 3, name: 'MLOps Foundations', skills: [{ id: 5, name: 'Experiment Tracking' }, { id: 6, name: 'Deployment Basics' }] },
-      ],
-      projects: fallbackProjects,
-      experience: [],
-      education: [],
-      certifications: [],
-      achievements: [],
-      socials: [],
-    };
+    return fallbackData;
   }
 }
 

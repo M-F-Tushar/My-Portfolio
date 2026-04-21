@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { redirect } from 'next/navigation';
-import { env } from '@/lib/env';
+import { getJwtSecret } from '@/lib/env';
 
 export const SESSION_COOKIE = 'portfolio_admin_session';
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
@@ -13,7 +13,7 @@ export interface AdminSession {
 }
 
 function getSecretKey() {
-    return textEncoder.encode(env.jwtSecret);
+    return textEncoder.encode(getJwtSecret());
 }
 
 async function readSessionCookieFromNextHeaders() {

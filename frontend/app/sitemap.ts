@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { prisma } from '@/lib/db';
-import { env } from '@/lib/env';
+import { env, hasDatabaseUrl } from '@/lib/env';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const now = new Date();
@@ -8,6 +8,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${env.siteUrl}${path}`,
         lastModified: now,
     }));
+
+    if (!hasDatabaseUrl()) {
+        return baseRoutes;
+    }
 
     try {
         const projects = await prisma.project.findMany({
