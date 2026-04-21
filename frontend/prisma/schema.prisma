@@ -68,7 +68,7 @@ model Profile {
   displayName   String      @default("Mahir Faysal Tusher")
   role          String      @default("Undergraduate CS Student | AI/ML Engineering Path")
   shortBio      String      @default("Undergraduate Computer Science student building practical AI systems across LLMs, machine learning, and MLOps.")
-  about         String      @default("I am building a professional foundation in AI Engineering, ML Engineering, LLM applications, and MLOps through projects, coursework, and continuous experimentation.")
+  about         String      @default("LLM apps, ML systems, Python, RAG, evaluation, MLOps.")
   location      String      @default("Chandpur, Bangladesh")
   email         String      @default("mahirfaysaltushar@gmail.com")
   currentFocus  String      @default("LLMs, machine learning systems, production-ready AI workflows, and MLOps foundations.")

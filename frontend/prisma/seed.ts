@@ -71,7 +71,7 @@ async function main() {
     {
       title: 'AI Portfolio Platform',
       slug: 'ai-portfolio-platform',
-      description: 'An admin-managed professional portfolio for AI/ML engineering growth, projects, resume, and contact workflow.',
+      description: 'CMS portfolio / resume / contact workflow.',
       category: 'Full Stack',
       techStack: JSON.stringify(['Next.js', 'Prisma', 'PostgreSQL', 'Vercel']),
       status: 'IN_PROGRESS' as const,
@@ -81,7 +81,7 @@ async function main() {
     {
       title: 'ML Learning Lab',
       slug: 'ml-learning-lab',
-      description: 'A growing collection of machine learning experiments, model evaluation notes, and reproducible notebooks.',
+      description: 'Model evaluation / notebooks / experiments.',
       category: 'Machine Learning',
       techStack: JSON.stringify(['Python', 'Scikit-learn', 'Pandas']),
       status: 'IN_PROGRESS' as const,

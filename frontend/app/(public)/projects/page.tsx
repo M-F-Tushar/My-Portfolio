@@ -18,8 +18,7 @@ const fallbackProjects: PublicProject[] = [
     {
         slug: 'ai-portfolio-platform',
         title: 'AI Portfolio Platform',
-        description:
-            'An admin-managed professional portfolio for AI/ML engineering growth, projects, resume, and contact workflow.',
+        description: 'CMS portfolio / resume / contact workflow.',
         category: 'Full Stack',
         techStack: '["Next.js","Prisma","PostgreSQL","Vercel"]',
         status: 'IN_PROGRESS',
@@ -30,8 +29,7 @@ const fallbackProjects: PublicProject[] = [
     {
         slug: 'ml-learning-lab',
         title: 'ML Learning Lab',
-        description:
-            'A growing collection of machine learning experiments, model evaluation notes, and reproducible notebooks.',
+        description: 'Model evaluation / notebooks / experiments.',
         category: 'Machine Learning',
         techStack: '["Python","Scikit-learn","Pandas"]',
         status: 'IN_PROGRESS',
@@ -80,10 +78,10 @@ export default async function ProjectsPage() {
                     <div className="max-w-3xl">
                         <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Projects</p>
                         <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight text-white md:text-6xl">
-                            Selected work, live experiments, and portfolio-ready builds.
+                            Projects
                         </h1>
                         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-                            Public project cards stay in sync with the CMS and only surface visible work.
+                            AI/ML builds / stack / links / status
                         </p>
                     </div>
                 </SectionReveal>
@@ -91,11 +89,6 @@ export default async function ProjectsPage() {
                 <SectionReveal className="container-wide">
                     {hasProjects ? (
                         <div className="space-y-5">
-                            {!hasDatabaseUrl() ? (
-                                <p className="text-sm text-slate-400">
-                                    Placeholder records are shown until the database is connected and seeded.
-                                </p>
-                            ) : null}
                             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                                 {projects.map((project) => (
                                     <ProjectCard key={project.slug} project={project} />

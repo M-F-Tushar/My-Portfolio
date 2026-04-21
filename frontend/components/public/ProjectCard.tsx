@@ -63,7 +63,7 @@ export default function ProjectCard({ project }: { project: ProjectCardProject }
             })}
           </div>
         ) : (
-          <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Details editable from admin</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Links pending</p>
         )}
       </div>
     </article>

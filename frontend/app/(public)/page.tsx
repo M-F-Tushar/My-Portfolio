@@ -27,8 +27,7 @@ export const dynamic = 'force-dynamic';
 const fallbackProfile = {
   displayName: 'Mahir Faysal Tusher',
   role: 'Undergraduate CS Student | AI/ML Engineering Path',
-  about:
-    'I am building a professional foundation in AI Engineering, ML Engineering, LLM applications, and MLOps through projects, coursework, and continuous experimentation.',
+  about: 'LLM apps, ML systems, Python, RAG, evaluation, MLOps.',
   location: 'Chandpur, Bangladesh',
   currentFocus: 'LLMs, machine learning systems, production-ready AI workflows, and MLOps foundations.',
 };
@@ -47,8 +46,7 @@ const fallbackHero = {
 const fallbackProjects: ProjectCardProject[] = [
   {
     title: 'AI Portfolio Platform',
-    description:
-      'An admin-managed professional portfolio for AI/ML engineering growth, projects, resume, and contact workflow.',
+    description: 'CMS portfolio / resume / contact workflow.',
     category: 'Full Stack',
     techStack: '["Next.js","Prisma","PostgreSQL","Vercel"]',
     status: 'IN_PROGRESS',
@@ -58,8 +56,7 @@ const fallbackProjects: ProjectCardProject[] = [
   },
   {
     title: 'ML Learning Lab',
-    description:
-      'A growing collection of machine learning experiments, model evaluation notes, and reproducible notebooks.',
+    description: 'Model evaluation / notebooks / experiments.',
     category: 'Machine Learning',
     techStack: '["Python","Scikit-learn","Pandas"]',
     status: 'IN_PROGRESS',
@@ -75,6 +72,8 @@ const candidateSignals = [
   { label: 'Production focus', value: 'MLOps', icon: GitBranch },
   { label: 'Output', value: 'Projects + Resume', icon: ShieldCheck },
 ];
+
+const aboutScanTags = ['LLM Apps', 'ML Systems', 'Python', 'RAG', 'Evaluation', 'MLOps'];
 
 const fallbackExperienceTimeline = [
   {
@@ -238,15 +237,21 @@ export default async function HomePage() {
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-emerald-200">About</p>
               <h2 className="mt-3 max-w-2xl text-4xl font-semibold leading-tight text-white md:text-5xl">
-                Candidate signal for AI, ML, and production-minded systems.
+                AI / ML Systems
               </h2>
-              <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">{data.profile.about}</p>
+              <div className="mt-6 flex max-w-3xl flex-wrap gap-2">
+                {aboutScanTags.map((tag) => (
+                  <span key={tag} className="rounded-md border border-cyan-200/25 bg-cyan-200/8 px-3 py-1.5 text-sm font-medium text-cyan-100">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
             <div className="evidence-board">
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-cyan-200">Evaluator snapshot</p>
-                  <p className="mt-1 text-sm text-slate-400">Fast scan of fit, focus, and career direction.</p>
+                  <p className="text-xs uppercase tracking-[0.24em] text-cyan-200">Profile</p>
+                  <p className="mt-1 text-sm text-slate-400">Role / location / focus</p>
                 </div>
                 <LineChart className="h-5 w-5 text-emerald-200" />
               </div>
@@ -271,10 +276,10 @@ export default async function HomePage() {
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Skills</p>
-              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Skill map for AI engineering roles.</h2>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Technical Stack</h2>
             </div>
             <p className="max-w-md text-sm leading-6 text-slate-400">
-              Each cluster is designed to communicate interview-ready direction, not just a list of tools.
+              LLMs / ML / MLOps / Python
             </p>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -303,8 +308,8 @@ export default async function HomePage() {
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Featured Projects</p>
-              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Project evidence, not just project names.</h2>
-              <p className="mt-2 text-slate-400">Each card highlights domain, stack, status, and follow-up links for technical review.</p>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Projects</h2>
+              <p className="mt-2 text-slate-400">Domain / stack / status / links</p>
             </div>
             <Link href="/projects" className="inline-flex items-center gap-2 text-sm text-cyan-200 hover:text-white">
               View all projects
@@ -322,9 +327,9 @@ export default async function HomePage() {
           <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr]">
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-emerald-200">Experience</p>
-              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">A progress timeline employers can scan.</h2>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Experience</h2>
               <p className="mt-4 text-sm leading-7 text-slate-400">
-                Built to show momentum from learning to applied AI systems work.
+                Timeline / projects / applied systems
               </p>
             </div>
             <div className="timeline-list">
@@ -347,9 +352,9 @@ export default async function HomePage() {
           <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr]">
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Education</p>
-              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Education path from CS core to AI focus.</h2>
+              <h2 className="mt-3 text-4xl font-semibold text-white md:text-5xl">Education</h2>
               <p className="mt-4 text-sm leading-7 text-slate-400">
-                A beginning-to-current timeline makes the candidate path easier to understand.
+                CS core / AI/ML focus / credentials
               </p>
             </div>
             <div className="timeline-list">
