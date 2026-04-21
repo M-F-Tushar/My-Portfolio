@@ -1,79 +1,69 @@
-# Setup Instructions
+# Setup Guide
 
-## Quick Start
+## 1. Install
 
-Before running the application, you need to:
+Run this from the repository root:
 
-### 1. Install Dependencies
-
-```bash
-# Install root dependencies
+```powershell
 npm install
-
-# Install frontend dependencies
-cd frontend
-npm install
-cd ..
-
-# Install backend dependencies
-cd backend
-pip install -r requirements.txt
-cd ..
 ```
 
-### 2. Generate Embeddings
+## 2. Create `.env.local`
 
-After installing backend dependencies, generate the FAISS index:
+The app reads private settings from `frontend/.env.local` while running locally.
 
-```bash
-python scripts/generate_embeddings.py
+```powershell
+Copy-Item frontend\.env.example frontend\.env.local
 ```
 
-This will create `data/sample_embeddings/index.faiss` from the sample dataset.
+Then open `frontend/.env.local` and replace the placeholder values.
 
-### 3. Configure Environment (Optional)
+Minimum required values:
 
-The app works offline without API keys, but for real LLM functionality:
-
-```bash
-cp .env.example .env
-# Edit .env and add your OPENROUTER_API_KEY
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
+DIRECT_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+JWT_SECRET="replace-with-a-long-random-secret"
+CSRF_SECRET="replace-with-another-long-random-secret"
 ```
 
-### 4. Run Development Servers
+For resume uploads, also add:
 
-```bash
-# Option 1: Run both servers with one command
-npm run dev
+```env
+BLOB_READ_WRITE_TOKEN="your-vercel-blob-token"
+```
 
-# Option 2: Run separately
-# Terminal 1 - Backend
-cd backend
-uvicorn main:app --reload --port 8000
+Full explanation: [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md).
 
-# Terminal 2 - Frontend
-cd frontend
+## 3. Prepare the Database
+
+After the database URL is correct:
+
+```powershell
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+```
+
+Use `db:migrate` when you want Prisma to create or update tables in a development database.
+
+## 4. Run Locally
+
+```powershell
 npm run dev
 ```
 
-Visit **http://localhost:3000**
+Public site: `http://localhost:3000`
 
-## Docker Alternative
+Admin login: `http://localhost:3000/admin/login`
 
-```bash
-docker-compose up --build
+## 5. Check Before Deployment
+
+```powershell
+npm run type-check
+npm run test
+npm run build
 ```
 
-## Troubleshooting
-
-**Issue**: `ModuleNotFoundError: No module named 'numpy'`
-- **Solution**: Run `pip install -r backend/requirements.txt`
-
-**Issue**: FAISS index not found
-- **Solution**: Run `python scripts/generate_embeddings.py`
-
-**Issue**: Frontend build errors
-- **Solution**: Run `cd frontend && npm install`
-
-**Issue**: Port already in use
-- **Solution**: Change ports in `.env` or kill existing processes
+If build fails because an environment variable is missing, add it to `frontend/.env.local` locally or to Vercel project settings in production.

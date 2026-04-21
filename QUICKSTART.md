@@ -1,100 +1,39 @@
-# Quick Start Guide
+# Quick Start
 
-## ✅ Setup Complete!
+Use this when you only want to run and edit the portfolio.
 
-All dependencies are installed and embeddings are generated. You're ready to run the AI portfolio!
-
-## 🚀 Run the Application
-
-### Option 1: Run Both Servers (Recommended)
-
-Open **two separate terminals** in the `ai-portfolio` directory:
-
-**Terminal 1 - Backend:**
 ```powershell
-cd C:\Users\User\OneDrive\Documents\Portfolio\ai-portfolio\backend
-uvicorn main:app --reload --port 8000
+npm install
+Copy-Item frontend\.env.example frontend\.env.local
 ```
 
-**Terminal 2 - Frontend:**
+Edit `frontend/.env.local`, then run:
+
 ```powershell
-cd C:\Users\User\OneDrive\Documents\Portfolio\ai-portfolio\frontend
+npm run db:generate
+npm run db:seed
 npm run dev
 ```
 
-Then visit: **http://localhost:3000**
+Open:
 
-### Option 2: Use npm Script (if concurrently works)
+- Public site: `http://localhost:3000`
+- Admin panel: `http://localhost:3000/admin/login`
 
-```powershell
-cd C:\Users\User\OneDrive\Documents\Portfolio\ai-portfolio
-npm run dev
-```
+## Your Normal Editing Flow
 
-## 📱 What to Explore
+1. Log in to `/admin`.
+2. Open the page for the section you want to edit.
+3. Change values in the form.
+4. Save.
+5. Visit the public page to review the result.
 
-1. **Homepage** (`/`) - Hero section + project gallery
-2. **Project Pages** (`/projects/llm-chatbot`, `/projects/rag-system`, `/projects/agent-demo`)
-3. **Chat Demo** (`/chat`) - RAG-powered Q&A with source attribution
-4. **Agent Playground** (`/agent`) - Multi-step AI agent (enable safety toggle first)
+Use:
 
-## 🔑 Optional: Add OpenRouter API Key
+- `Skills` when you learn a new technology.
+- `Projects` when you add a portfolio project or case-study link.
+- `Resume` to upload a direct PDF.
+- `Contact Inbox` to review visitor messages.
+- `Achievements` and `Demos` when you are ready to show real entries.
 
-The app works offline, but for real LLM responses:
-
-1. Copy `.env.example` to `.env`:
-   ```powershell
-   copy .env.example .env
-   ```
-
-2. Edit `.env` and add your OpenRouter API key:
-   ```
-   OPENROUTER_API_KEY=sk-or-v1-your-key-here
-   ```
-
-3. Restart the backend server
-
-## ✏️ Personalize Your Portfolio
-
-Replace TODO markers in these files:
-
-- **README.md** - GitHub username, bio, contact links
-- **ABOUT.md** - Your experience, education, skills
-- **frontend/components/Footer.tsx** - Social media links
-- **LICENSE** - Your name
-
-## 🧪 Run Tests
-
-```powershell
-# Backend tests
-cd backend
-pytest tests/ -v
-
-# Frontend type-check
-cd frontend
-npm run type-check
-```
-
-## 📦 Deploy
-
-### Vercel
-```powershell
-npm i -g vercel
-vercel --prod
-```
-
-### Docker
-```powershell
-docker-compose up --build
-```
-
-## 🎯 Current Status
-
-✅ Dependencies installed
-✅ FAISS embeddings generated (15 documents, 384 dimensions)
-✅ Frontend ready (Next.js + TypeScript)
-✅ Backend ready (FastAPI + RAG + Agent)
-✅ Sample projects created
-✅ Tests available
-
-**You're all set! Start the servers and explore your AI portfolio!**
+No blog or articles are part of this portfolio.
