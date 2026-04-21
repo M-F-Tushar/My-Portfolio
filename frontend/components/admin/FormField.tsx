@@ -1,6 +1,6 @@
 'use client';
 
-import type { ChangeEvent, InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 type BaseFieldProps = {
     label: string;
@@ -11,15 +11,13 @@ type BaseFieldProps = {
 
 type InputFieldProps = BaseFieldProps & {
     multiline?: false;
-    value: string;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>;
+    textarea?: false;
+} & InputHTMLAttributes<HTMLInputElement>;
 
 type TextareaFieldProps = BaseFieldProps & {
-    multiline: true;
-    value: string;
-    onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-} & Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'>;
+    multiline?: true;
+    textarea?: true;
+} & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export type FormFieldProps = InputFieldProps | TextareaFieldProps;
 
@@ -27,14 +25,14 @@ const sharedClassName =
     'mt-2 w-full rounded-lg border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none placeholder:text-slate-500 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/15';
 
 export default function FormField(props: FormFieldProps) {
-    const { label, hint, error, className, multiline, ...fieldProps } = props;
+    const { label, hint, error, className, multiline, textarea, ...fieldProps } = props;
     const fieldId = props.id ?? props.name;
     const wrapperClassName = ['space-y-2', className ?? ''].join(' ');
 
     return (
         <label className={wrapperClassName} htmlFor={fieldId}>
             <span className="block text-sm font-medium text-slate-200">{label}</span>
-            {multiline ? (
+            {multiline || textarea ? (
                 <textarea
                     {...(fieldProps as TextareaFieldProps)}
                     id={fieldId}
