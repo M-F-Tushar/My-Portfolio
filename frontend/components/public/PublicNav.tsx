@@ -24,8 +24,8 @@ export default async function PublicNav() {
         { label: 'Home', href: '/' },
         { label: 'Projects', href: '/projects' },
         ...(showDemosInNav ? [{ label: 'Demos', href: '/demos' }] : []),
-        { label: 'Resume', href: '/resume.pdf' },
-        { label: 'Contact', href: '/contact' },
+        { label: 'Resume', href: '/resume' },
+        { label: 'Contact', href: '/#contact' },
     ];
 
     return (
