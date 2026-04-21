@@ -61,8 +61,8 @@ const navSections: { heading: string; items: NavItem[] }[] = [
     {
         heading: 'Contact',
         items: [
-            { label: 'Social Links', href: '/admin/social-links', icon: Share2 },
-            { label: 'Contact Inbox', href: '/admin/contact-inbox', icon: Inbox },
+            { label: 'Social Links', href: '/admin/social', icon: Share2 },
+            { label: 'Contact Inbox', href: '/admin/contact-submissions', icon: Inbox },
         ],
     },
     {
