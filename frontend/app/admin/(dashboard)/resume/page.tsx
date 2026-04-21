@@ -122,7 +122,7 @@ export default async function AdminResumePage() {
                                 {media?.fileName ?? 'No resume file linked'}
                             </h2>
                             <p className="mt-1 text-sm text-slate-400">
-                                {profile?.displayName ?? 'Resume'}{profile?.role ? ` • ${profile.role}` : ''}
+                                {profile?.displayName ?? 'Resume'}{profile?.role ? ` - ${profile.role}` : ''}
                             </p>
                         </div>
                         <div className="rounded-lg border border-white/10 px-3 py-2 text-xs font-semibold text-slate-200">

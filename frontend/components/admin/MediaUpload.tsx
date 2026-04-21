@@ -129,7 +129,7 @@ export default function MediaUpload({
                         <p className="truncate text-sm font-medium text-white">{currentMedia.fileName}</p>
                         <p className="text-xs text-slate-400">
                             {currentMedia.mimeType}
-                            {currentSize ? ` • ${currentSize}` : ''}
+                            {currentSize ? ` - ${currentSize}` : ''}
                         </p>
                     </div>
                     <a
