@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
+import { hasDatabaseUrl } from '@/lib/env';
 
 async function getPublicNavSettings() {
+    if (!hasDatabaseUrl()) {
+        return null;
+    }
+
     try {
         return await prisma.siteSettings.findUnique({
             where: { id: 1 },
@@ -44,7 +49,20 @@ export default async function PublicNav() {
                         <Link
                             key={link.label}
                             href={link.href}
-                            className="rounded-full px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white focus-ring"
+                            className="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white focus-ring"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
+                </div>
+            </div>
+            <div className="border-t border-white/5 md:hidden">
+                <div className="container-wide flex gap-2 overflow-x-auto py-2">
+                    {links.map((link) => (
+                        <Link
+                            key={link.label}
+                            href={link.href}
+                            className="shrink-0 rounded-lg border border-white/10 px-3 py-1.5 text-sm text-slate-300 transition hover:border-cyan-200/40 hover:text-white focus-ring"
                         >
                             {link.label}
                         </Link>
