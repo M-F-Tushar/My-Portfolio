@@ -1,24 +1,6 @@
 {
-    "rewrites": [
-        {
-            "source": "/api/agent",
-            "destination": "/backend/main.py"
-        },
-        {
-            "source": "/api/query",
-            "destination": "/backend/main.py"
-        },
-        {
-            "source": "/api/health",
-            "destination": "/backend/main.py"
-        },
-        {
-            "source": "/api/docs",
-            "destination": "/backend/main.py"
-        },
-        {
-            "source": "/api/openapi.json",
-            "destination": "/backend/main.py"
-        }
-    ]
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
+    "outputDirectory": ".next",
+    "framework": "nextjs"
 }

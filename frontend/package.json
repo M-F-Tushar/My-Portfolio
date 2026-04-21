@@ -4,11 +4,12 @@
     "private": true,
     "scripts": {
         "dev": "next dev -p 3000",
-        "build": "npx prisma generate && next build",
+        "build": "prisma generate && next build",
         "start": "next start",
         "lint": "next lint",
         "test": "jest",
-        "type-check": "tsc --noEmit"
+        "type-check": "tsc --noEmit",
+        "db:seed": "tsx prisma/seed.ts"
     },
     "dependencies": {
         "@sentry/nextjs": "^10.29.0",
@@ -18,15 +19,17 @@
         "@tsparticles/slim": "^3.9.1",
         "@upstash/ratelimit": "^2.0.7",
         "@upstash/redis": "^1.35.8",
-        "axios": "^1.7.0",
+        "@vercel/blob": "^0.27.3",
+        "axios": "^1.15.0",
         "bcryptjs": "^3.0.3",
         "cookie": "^1.0.2",
         "framer-motion": "^11.18.2",
         "gray-matter": "^4.0.3",
+        "jose": "^6.2.2",
         "jsonwebtoken": "^9.0.2",
         "lucide-react": "^0.378.0",
         "mermaid": "^10.9.0",
-        "next": "14.2.0",
+        "next": "14.2.35",
         "react": "^18.3.0",
         "react-dom": "^18.3.0",
         "react-markdown": "^9.0.1",
@@ -35,7 +38,8 @@
         "remark-gfm": "^4.0.0",
         "remark-math": "^6.0.0",
         "resend": "^6.5.2",
-        "typewriter-effect": "^2.22.0"
+        "typewriter-effect": "^2.22.0",
+        "zod": "^3.25.76"
     },
     "devDependencies": {
         "@prisma/client": "^5.22.0",
@@ -50,7 +54,7 @@
         "@types/react-dom": "^18.3.0",
         "autoprefixer": "^10.4.0",
         "eslint": "^8.57.0",
-        "eslint-config-next": "14.2.0",
+        "eslint-config-next": "14.2.35",
         "jest": "^30.2.0",
         "jest-environment-jsdom": "^30.2.0",
         "postcss": "^8.4.0",

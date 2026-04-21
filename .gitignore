@@ -21,6 +21,7 @@ frontend/.next/
 frontend/out/
 frontend/build/
 dist/
+*.tsbuildinfo
 *.log
 
 # IDE
