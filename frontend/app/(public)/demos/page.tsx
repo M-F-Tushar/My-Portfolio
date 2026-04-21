@@ -27,7 +27,7 @@ async function loadDemosPageData(): Promise<DemoPageState> {
     if (!hasDatabaseUrl()) {
         return {
             demos: [],
-            loadingIssue: true,
+            loadingIssue: false,
         };
     }
 

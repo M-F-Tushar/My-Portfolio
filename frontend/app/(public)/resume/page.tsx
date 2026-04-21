@@ -46,14 +46,14 @@ async function loadResumePageData(): Promise<ResumePageState> {
         return {
             displayName: 'Portfolio resume',
             role: 'Professional summary',
-            summary: 'The resume asset could not be loaded right now.',
+            summary: 'Upload a direct PDF from the admin panel when the resume is ready.',
             resumeUrl: null,
             fileName: null,
             mimeType: null,
             fileSize: null,
             lastUpdatedDate: null,
             highlights: [],
-            loadingIssue: true,
+            loadingIssue: false,
         };
     }
 

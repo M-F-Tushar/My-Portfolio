@@ -14,11 +14,38 @@ type ProjectsPageState = {
     loadingIssue: boolean;
 };
 
+const fallbackProjects: PublicProject[] = [
+    {
+        slug: 'ai-portfolio-platform',
+        title: 'AI Portfolio Platform',
+        description:
+            'An admin-managed professional portfolio for AI/ML engineering growth, projects, resume, and contact workflow.',
+        category: 'Full Stack',
+        techStack: '["Next.js","Prisma","PostgreSQL","Vercel"]',
+        status: 'IN_PROGRESS',
+        caseStudyUrl: null,
+        githubUrl: null,
+        liveDemoUrl: null,
+    },
+    {
+        slug: 'ml-learning-lab',
+        title: 'ML Learning Lab',
+        description:
+            'A growing collection of machine learning experiments, model evaluation notes, and reproducible notebooks.',
+        category: 'Machine Learning',
+        techStack: '["Python","Scikit-learn","Pandas"]',
+        status: 'IN_PROGRESS',
+        caseStudyUrl: null,
+        githubUrl: null,
+        liveDemoUrl: null,
+    },
+];
+
 async function loadProjectsPageData(): Promise<ProjectsPageState> {
     if (!hasDatabaseUrl()) {
         return {
-            projects: [],
-            loadingIssue: true,
+            projects: fallbackProjects,
+            loadingIssue: false,
         };
     }
 
@@ -63,10 +90,17 @@ export default async function ProjectsPage() {
 
                 <SectionReveal className="container-wide">
                     {hasProjects ? (
-                        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                            {projects.map((project) => (
-                                <ProjectCard key={project.slug} project={project} />
-                            ))}
+                        <div className="space-y-5">
+                            {!hasDatabaseUrl() ? (
+                                <p className="text-sm text-slate-400">
+                                    Placeholder records are shown until the database is connected and seeded.
+                                </p>
+                            ) : null}
+                            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                                {projects.map((project) => (
+                                    <ProjectCard key={project.slug} project={project} />
+                                ))}
+                            </div>
                         </div>
                     ) : (
                         <div className="glass-panel rounded-lg p-6 md:p-8">
