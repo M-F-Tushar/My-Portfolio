@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   ArrowUpRight,
   BrainCircuit,
@@ -83,6 +82,15 @@ const candidateSignals = [
 ];
 
 const aboutScanTags = ['LLM Apps', 'ML Systems', 'Python', 'RAG', 'Evaluation', 'MLOps'];
+
+const workflowStages = [
+  { label: 'Prompt', detail: 'User goal + context', icon: Sparkles },
+  { label: 'Retrieval', detail: 'Docs / data / memory', icon: Layers3 },
+  { label: 'Model', detail: 'LLM or ML pipeline', icon: BrainCircuit },
+  { label: 'Eval', detail: 'Quality + reliability', icon: LineChart },
+];
+
+const modelOutputs = ['RAG', 'Evaluation', 'MLOps', 'Deployment'];
 
 const processSteps = [
   {
@@ -226,7 +234,6 @@ export default async function HomePage() {
   const heroTags = chips.length ? chips : ['LLM Apps', 'Machine Learning', 'MLOps'];
   const experienceTimeline = data.experience.length ? data.experience : fallbackExperienceTimeline;
   const educationTimeline = data.education.length ? data.education : fallbackEducationTimeline;
-  const profileImageUrl = data.profile.profileImage?.url ?? null;
   const initials = getInitials(data.profile.displayName);
   const heroMetrics = [
     { value: 'CS', label: 'Undergraduate' },
@@ -286,36 +293,51 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <div className="hero-profile-panel">
-                <div className="hero-image-frame">
-                  {profileImageUrl ? (
-                    <Image
-                      src={profileImageUrl}
-                      alt={data.profile.displayName}
-                      fill
-                      sizes="(min-width: 1024px) 28rem, 100vw"
-                      className="object-cover"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="profile-visual-mark">
-                      <span>{initials}</span>
-                      <BrainCircuit className="h-12 w-12 text-cyan-200" />
-                    </div>
-                  )}
+              <div className="hero-workbench" aria-label="AI engineering workflow visual">
+                <div className="workbench-toolbar">
+                  <span />
+                  <span />
+                  <span />
+                  <strong>ai-system.ts</strong>
                 </div>
-                <div className="mt-5 grid gap-3">
-                  {candidateSignals.map((signal) => {
-                    const Icon = signal.icon;
+                <div className="workbench-body">
+                  <div className="workbench-terminal">
+                    <p className="terminal-label">SYSTEM PIPELINE</p>
+                    <div className="code-line">
+                      <span>const</span>
+                      {` candidate = "${initials}";`}
+                    </div>
+                    <div className="code-line">
+                      <span>focus</span>
+                      {' = ["LLMs", "ML", "MLOps"];'}
+                    </div>
+                    <div className="code-line">
+                      <span>ship</span>
+                      {' = evaluate(build(project));'}
+                    </div>
+                  </div>
 
-                    return (
-                      <div key={signal.label} className="signal-row">
-                        <Icon className="h-4 w-4 text-cyan-200" />
-                        <span>{signal.label}</span>
-                        <strong>{signal.value}</strong>
-                      </div>
-                    );
-                  })}
+                  <div className="pipeline-stack">
+                    {workflowStages.map((stage) => {
+                      const Icon = stage.icon;
+
+                      return (
+                        <div key={stage.label} className="pipeline-step">
+                          <Icon className="h-4 w-4 text-cyan-200" />
+                          <div>
+                            <strong>{stage.label}</strong>
+                            <span>{stage.detail}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="model-output-strip">
+                    {modelOutputs.map((output) => (
+                      <span key={output}>{output}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -325,39 +347,41 @@ export default async function HomePage() {
         <SectionReveal id="about" className="portfolio-section">
           <div className="container-wide">
             <div className="about-arrangement">
-              <aside className="profile-card">
-                <div className="profile-card-avatar">
-                  {profileImageUrl ? (
-                    <Image
-                      src={profileImageUrl}
-                      alt={data.profile.displayName}
-                      fill
-                      sizes="7rem"
-                      className="object-cover"
-                      unoptimized
-                    />
-                  ) : (
-                    <span>{initials}</span>
-                  )}
+              <aside className="about-signal-panel">
+                <div className="signal-header">
+                  <span>{initials}</span>
+                  <div>
+                    <p>Candidate Signal</p>
+                    <strong>{data.profile.displayName}</strong>
+                  </div>
                 </div>
-                <h2>{data.profile.displayName}</h2>
-                <p>{data.profile.role}</p>
-                <div className="mt-5 flex flex-wrap justify-center gap-2">
+                <div className="signal-pill-row">
                   {aboutScanTags.slice(0, 5).map((tag) => (
                     <span key={tag} className="tech-chip compact">
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="profile-card-meta">
-                  <span>
+                <div className="signal-list">
+                  <div>
                     <MapPin className="h-4 w-4" />
-                    {data.profile.location}
-                  </span>
-                  <span>
+                    <span>{data.profile.location}</span>
+                  </div>
+                  <div>
                     <Mail className="h-4 w-4" />
-                    {data.profile.email}
-                  </span>
+                    <span>{data.profile.email}</span>
+                  </div>
+                  {candidateSignals.map((signal) => {
+                    const Icon = signal.icon;
+
+                    return (
+                      <div key={signal.label}>
+                        <Icon className="h-4 w-4" />
+                        <span>{signal.label}</span>
+                        <strong>{signal.value}</strong>
+                      </div>
+                    );
+                  })}
                 </div>
               </aside>
 
