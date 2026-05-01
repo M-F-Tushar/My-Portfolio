@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowUpRight,
   BrainCircuit,
@@ -91,6 +92,8 @@ const workflowStages = [
 ];
 
 const modelOutputs = ['RAG', 'Evaluation', 'MLOps', 'Deployment'];
+
+const orbitSignals = ['RAG', 'Tokens', 'Vectors', 'Eval', 'MLOps'];
 
 const processSteps = [
   {
@@ -234,6 +237,7 @@ export default async function HomePage() {
   const heroTags = chips.length ? chips : ['LLM Apps', 'Machine Learning', 'MLOps'];
   const experienceTimeline = data.experience.length ? data.experience : fallbackExperienceTimeline;
   const educationTimeline = data.education.length ? data.education : fallbackEducationTimeline;
+  const profileImageUrl = data.profile.profileImage?.url ?? null;
   const initials = getInitials(data.profile.displayName);
   const heroMetrics = [
     { value: 'CS', label: 'Undergraduate' },
@@ -293,47 +297,48 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <div className="hero-workbench" aria-label="AI engineering workflow visual">
-                <div className="workbench-toolbar">
-                  <span />
-                  <span />
-                  <span />
-                  <strong>ai-system.ts</strong>
-                </div>
-                <div className="workbench-body">
-                  <div className="workbench-terminal">
-                    <p className="terminal-label">SYSTEM PIPELINE</p>
-                    <div className="code-line">
-                      <span>const</span>
-                      {` candidate = "${initials}";`}
+              <div className="hero-ai-stage" aria-label="AI engineering neural system visual">
+                <div className="ai-stage-field">
+                  <div className="portrait-system">
+                    <div className="portrait-core">
+                      <span className="portrait-initials">{initials}</span>
+                      {profileImageUrl ? (
+                        <Image
+                          src={profileImageUrl}
+                          alt={data.profile.displayName}
+                          fill
+                          sizes="(min-width: 1024px) 15rem, 12rem"
+                          className="object-cover"
+                          priority
+                          unoptimized
+                        />
+                      ) : null}
                     </div>
-                    <div className="code-line">
-                      <span>focus</span>
-                      {' = ["LLMs", "ML", "MLOps"];'}
-                    </div>
-                    <div className="code-line">
-                      <span>ship</span>
-                      {' = evaluate(build(project));'}
-                    </div>
+                    {orbitSignals.map((signal, index) => (
+                      <span key={signal} className={`orbit-signal orbit-signal-${index + 1}`}>
+                        {signal}
+                      </span>
+                    ))}
                   </div>
 
-                  <div className="pipeline-stack">
-                    {workflowStages.map((stage) => {
+                  <div className="llm-system-map">
+                    {workflowStages.map((stage, index) => {
                       const Icon = stage.icon;
 
                       return (
-                        <div key={stage.label} className="pipeline-step">
+                        <div key={stage.label} className="llm-layer">
+                          <span>{String(index + 1).padStart(2, '0')}</span>
                           <Icon className="h-4 w-4 text-cyan-200" />
                           <div>
                             <strong>{stage.label}</strong>
-                            <span>{stage.detail}</span>
+                            <small>{stage.detail}</small>
                           </div>
                         </div>
                       );
                     })}
                   </div>
 
-                  <div className="model-output-strip">
+                  <div className="ai-output-strip">
                     {modelOutputs.map((output) => (
                       <span key={output}>{output}</span>
                     ))}
