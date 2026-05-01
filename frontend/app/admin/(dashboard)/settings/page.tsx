@@ -10,6 +10,9 @@ async function saveSettings(formData: FormData) {
 
     const data = {
         siteName: requiredString(formData, 'siteName', 'Site name'),
+        navTagline: requiredString(formData, 'navTagline', 'Navigation tagline'),
+        navCtaLabel: requiredString(formData, 'navCtaLabel', 'Navigation CTA label'),
+        navCtaHref: requiredString(formData, 'navCtaHref', 'Navigation CTA href'),
         seoTitle: requiredString(formData, 'seoTitle', 'SEO title'),
         seoDescription: requiredString(formData, 'seoDescription', 'SEO description'),
         showDemosInNav: checkboxValue(formData, 'showDemosInNav'),
@@ -33,12 +36,17 @@ export default async function AdminSettingsPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Settings</p>
                 <h1 className="text-3xl font-semibold tracking-tight text-white">Edit site settings</h1>
                 <p className="max-w-3xl text-sm leading-6 text-slate-400">
-                    Update the site identity, metadata copy, and the public demos navigation switch.
+                    Update the site identity, navigation labels, metadata copy, and the public demos navigation switch.
                 </p>
             </section>
 
             <form action={saveSettings} className="space-y-6 rounded-lg border border-white/10 bg-slate-900/70 p-5">
                 <FormField label="Site name" name="siteName" required defaultValue={settings?.siteName} />
+                <div className="grid gap-5 md:grid-cols-3">
+                    <FormField label="Navigation tagline" name="navTagline" required defaultValue={settings?.navTagline ?? 'AI/ML portfolio'} />
+                    <FormField label="Navigation CTA label" name="navCtaLabel" required defaultValue={settings?.navCtaLabel ?? "Let's Talk"} />
+                    <FormField label="Navigation CTA href" name="navCtaHref" required defaultValue={settings?.navCtaHref ?? '/#contact'} />
+                </div>
                 <FormField label="SEO title" name="seoTitle" required defaultValue={settings?.seoTitle} />
                 <FormField
                     label="SEO description"

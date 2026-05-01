@@ -1244,6 +1244,49 @@
         flex-direction: column;
     }
 
+    .project-card-image {
+        position: relative;
+        margin: -0.25rem -0.25rem 1rem;
+        min-height: 10rem;
+        overflow: hidden;
+        border: 1px solid rgba(34, 211, 238, 0.16);
+        border-radius: 0.45rem;
+        background:
+            linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(52, 211, 153, 0.06)),
+            rgba(2, 6, 23, 0.76);
+    }
+
+    .project-card-image img {
+        transition: transform 260ms ease, filter 260ms ease;
+    }
+
+    .project-card:hover .project-card-image img {
+        transform: scale(1.035);
+        filter: saturate(1.08);
+    }
+
+    .skill-token {
+        display: grid;
+        min-width: 8.25rem;
+        gap: 0.4rem;
+        align-items: center;
+    }
+
+    .skill-token-meter {
+        display: block;
+        height: 0.2rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .skill-token-meter i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #67e8f9, #a7f3d0);
+    }
+
     .timeline-list {
         position: relative;
         display: grid;

@@ -43,6 +43,7 @@ const navSections: { heading: string; items: NavItem[] }[] = [
         items: [
             { label: 'Profile', href: '/admin/profile', icon: UserRound },
             { label: 'Hero', href: '/admin/hero', icon: Sparkles },
+            { label: 'Homepage', href: '/admin/homepage', icon: LayoutDashboard },
             { label: 'Skills', href: '/admin/skills', icon: Code2 },
             { label: 'Projects', href: '/admin/projects', icon: FolderKanban },
             { label: 'Demos', href: '/admin/demos', icon: PlaySquare },

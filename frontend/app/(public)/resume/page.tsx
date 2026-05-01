@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 import { parseStringArray } from '@/lib/content/json';
+import { homepageContentDefaults } from '@/lib/content/homepage';
 import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import SectionReveal from '@/components/public/SectionReveal';
@@ -9,6 +10,7 @@ export const dynamic = 'force-dynamic';
 
 type ResumePageState = {
     displayName: string;
+    pageKicker: string;
     role: string;
     summary: string;
     resumeUrl: string | null;
@@ -45,6 +47,7 @@ async function loadResumePageData(): Promise<ResumePageState> {
     if (!hasDatabaseUrl()) {
         return {
             displayName: 'Portfolio resume',
+            pageKicker: homepageContentDefaults.resumePageKicker,
             role: 'Professional summary',
             summary: 'Upload a direct PDF from the admin panel when the resume is ready.',
             resumeUrl: null,
@@ -58,7 +61,7 @@ async function loadResumePageData(): Promise<ResumePageState> {
     }
 
     try {
-        const [profile, resumeAsset] = await Promise.all([
+        const [profile, resumeAsset, content] = await Promise.all([
             prisma.profile.findUnique({
                 where: { id: 1 },
                 select: {
@@ -82,6 +85,10 @@ async function loadResumePageData(): Promise<ResumePageState> {
                     },
                 },
             }),
+            prisma.homepageContent.findUnique({
+                where: { id: 1 },
+                select: { resumePageKicker: true },
+            }),
         ]);
 
         const highlights = parseStringArray(resumeAsset?.highlights);
@@ -89,6 +96,7 @@ async function loadResumePageData(): Promise<ResumePageState> {
 
         return {
             displayName: profile?.displayName ?? 'Portfolio resume',
+            pageKicker: content?.resumePageKicker ?? homepageContentDefaults.resumePageKicker,
             role: profile?.role ?? 'Professional summary',
             summary:
                 profile?.shortBio ??
@@ -104,6 +112,7 @@ async function loadResumePageData(): Promise<ResumePageState> {
     } catch {
         return {
             displayName: 'Portfolio resume',
+            pageKicker: homepageContentDefaults.resumePageKicker,
             role: 'Professional summary',
             summary: 'The resume asset could not be loaded right now.',
             resumeUrl: null,
@@ -130,7 +139,7 @@ export default async function ResumePage() {
             <main className="space-y-12 pb-16">
                 <SectionReveal className="container-wide py-14 md:py-16">
                     <div className="max-w-3xl">
-                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Resume</p>
+                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">{data.pageKicker}</p>
                         <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight text-white md:text-6xl">
                             {data.displayName}
                         </h1>

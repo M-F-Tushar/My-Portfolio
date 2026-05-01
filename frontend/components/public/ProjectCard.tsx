@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight, Github, MonitorPlay } from 'lucide-react';
 import { parseStringArray } from '@/lib/content/json';
 
@@ -11,6 +12,10 @@ export interface ProjectCardProject {
   liveDemoUrl?: string | null;
   caseStudyUrl?: string | null;
   status: string;
+  image?: {
+    url: string;
+    altText?: string | null;
+  } | null;
 }
 
 export default function ProjectCard({ project }: { project: ProjectCardProject }) {
@@ -25,6 +30,18 @@ export default function ProjectCard({ project }: { project: ProjectCardProject }
   return (
     <article className="project-card group">
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-300 via-sky-300 to-emerald-300 opacity-70" />
+      {project.image?.url ? (
+        <div className="project-card-image">
+          <Image
+            src={project.image.url}
+            alt={project.image.altText || project.title}
+            fill
+            sizes="(min-width: 1280px) 26rem, (min-width: 768px) 50vw, 100vw"
+            className="object-cover"
+            unoptimized
+          />
+        </div>
+      ) : null}
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-cyan-200">{project.category}</p>

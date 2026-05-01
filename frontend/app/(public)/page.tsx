@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { prisma } from '@/lib/db';
 import { parseStringArray } from '@/lib/content/json';
+import { homepageContentDefaults, parseLabelValueItems } from '@/lib/content/homepage';
 import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import HeroVisual from '@/components/public/HeroVisual';
@@ -62,6 +63,7 @@ const fallbackProjects: ProjectCardProject[] = [
     caseStudyUrl: null,
     githubUrl: null,
     liveDemoUrl: null,
+    image: null,
   },
   {
     title: 'ML Learning Lab',
@@ -72,49 +74,7 @@ const fallbackProjects: ProjectCardProject[] = [
     caseStudyUrl: null,
     githubUrl: null,
     liveDemoUrl: null,
-  },
-];
-
-const candidateSignals = [
-  { label: 'Direction', value: 'AI Engineering', icon: BrainCircuit },
-  { label: 'Strength', value: 'ML Systems', icon: Cpu },
-  { label: 'Production focus', value: 'MLOps', icon: GitBranch },
-  { label: 'Output', value: 'Projects + Resume', icon: ShieldCheck },
-];
-
-const aboutScanTags = ['LLM Apps', 'ML Systems', 'Python', 'RAG', 'Evaluation', 'MLOps'];
-
-const workflowStages = [
-  { label: 'Prompt', detail: 'User goal + context', icon: Sparkles },
-  { label: 'Retrieval', detail: 'Docs / data / memory', icon: Layers3 },
-  { label: 'Model', detail: 'LLM or ML pipeline', icon: BrainCircuit },
-  { label: 'Eval', detail: 'Quality + reliability', icon: LineChart },
-];
-
-const modelOutputs = ['RAG', 'Evaluation', 'MLOps', 'Deployment'];
-
-const orbitSignals = ['RAG', 'Tokens', 'Vectors', 'Eval', 'MLOps'];
-
-const processSteps = [
-  {
-    title: 'Scope',
-    body: 'Define the role signal, project goal, and measurable outcome.',
-    icon: Target,
-  },
-  {
-    title: 'Build',
-    body: 'Ship the smallest working AI/ML system with clean engineering habits.',
-    icon: Cpu,
-  },
-  {
-    title: 'Evaluate',
-    body: 'Review outputs, data flow, reliability, and deployment readiness.',
-    icon: LineChart,
-  },
-  {
-    title: 'Publish',
-    body: 'Turn the work into a project card, resume point, and case-study link.',
-    icon: Rocket,
+    image: null,
   },
 ];
 
@@ -156,10 +116,11 @@ async function loadHomeData() {
     profile: fallbackProfile,
     hero: fallbackHero,
     skillCategories: [
-      { id: 1, name: 'AI and LLMs', skills: [{ id: 1, name: 'LLM Fundamentals' }, { id: 2, name: 'RAG Concepts' }] },
-      { id: 2, name: 'Machine Learning', skills: [{ id: 3, name: 'Python' }, { id: 4, name: 'Model Evaluation' }] },
-      { id: 3, name: 'MLOps Foundations', skills: [{ id: 5, name: 'Experiment Tracking' }, { id: 6, name: 'Deployment Basics' }] },
+      { id: 1, name: 'AI and LLMs', skills: [{ id: 1, name: 'LLM Fundamentals', proficiency: 70 }, { id: 2, name: 'RAG Concepts', proficiency: 70 }] },
+      { id: 2, name: 'Machine Learning', skills: [{ id: 3, name: 'Python', proficiency: 70 }, { id: 4, name: 'Model Evaluation', proficiency: 70 }] },
+      { id: 3, name: 'MLOps Foundations', skills: [{ id: 5, name: 'Experiment Tracking', proficiency: 70 }, { id: 6, name: 'Deployment Basics', proficiency: 70 }] },
     ],
+    homepage: homepageContentDefaults,
     projects: fallbackProjects,
     experience: [],
     education: [],
@@ -176,6 +137,7 @@ async function loadHomeData() {
     const [
       profile,
       hero,
+      homepage,
       skillCategories,
       projects,
       experience,
@@ -189,6 +151,7 @@ async function loadHomeData() {
         include: { profileImage: true },
       }),
       prisma.hero.findUnique({ where: { id: 1 } }),
+      prisma.homepageContent.findUnique({ where: { id: 1 } }),
       prisma.skillCategory.findMany({
         where: { visible: true },
         include: { skills: { where: { visible: true }, orderBy: { sortOrder: 'asc' } } },
@@ -196,6 +159,7 @@ async function loadHomeData() {
       }),
       prisma.project.findMany({
         where: { visible: true, featured: true },
+        include: { image: true },
         orderBy: [{ sortOrder: 'asc' }, { updatedAt: 'desc' }],
         take: 6,
       }),
@@ -209,6 +173,7 @@ async function loadHomeData() {
     return {
       profile: profile ?? fallbackProfile,
       hero: hero ?? fallbackHero,
+      homepage: homepage ?? homepageContentDefaults,
       skillCategories,
       projects: projects.length ? projects : fallbackProjects,
       experience,
@@ -231,17 +196,54 @@ function getInitials(name: string) {
     .join('');
 }
 
+function clampPercent(value: number | null | undefined) {
+  if (typeof value !== 'number' || Number.isNaN(value)) {
+    return 70;
+  }
+
+  return Math.min(100, Math.max(0, value));
+}
+
 export default async function HomePage() {
   const data = await loadHomeData();
+  const content = data.homepage;
   const chips = parseStringArray(data.hero.featuredChips);
   const heroTags = chips.length ? chips : ['LLM Apps', 'Machine Learning', 'MLOps'];
+  const heroOrbitSignals = parseStringArray(content.heroOrbitSignals).length
+    ? parseStringArray(content.heroOrbitSignals).slice(0, 5)
+    : parseStringArray(homepageContentDefaults.heroOrbitSignals);
+  const workflowIcons = [Sparkles, Layers3, BrainCircuit, LineChart];
+  const workflowStages = parseLabelValueItems(
+    content.heroWorkflowStages,
+    parseLabelValueItems(homepageContentDefaults.heroWorkflowStages, []),
+  ).map((stage, index) => ({ ...stage, icon: workflowIcons[index % workflowIcons.length] }));
+  const modelOutputs = parseStringArray(content.heroOutputTags).length
+    ? parseStringArray(content.heroOutputTags)
+    : parseStringArray(homepageContentDefaults.heroOutputTags);
+  const aboutScanTags = parseStringArray(content.aboutScanTags).length
+    ? parseStringArray(content.aboutScanTags)
+    : parseStringArray(homepageContentDefaults.aboutScanTags);
+  const signalIcons = [BrainCircuit, Cpu, GitBranch, ShieldCheck];
+  const candidateSignals = parseLabelValueItems(
+    content.candidateSignals,
+    parseLabelValueItems(homepageContentDefaults.candidateSignals, []),
+  ).map((signal, index) => ({ ...signal, icon: signalIcons[index % signalIcons.length] }));
+  const processIcons = [Target, Cpu, LineChart, Rocket];
+  const processSteps = parseLabelValueItems(
+    content.processSteps,
+    parseLabelValueItems(homepageContentDefaults.processSteps, []),
+  ).map((step, index) => ({ title: step.label, body: step.value, icon: processIcons[index % processIcons.length] }));
+  const contactTiles = parseLabelValueItems(
+    content.contactTiles,
+    parseLabelValueItems(homepageContentDefaults.contactTiles, []),
+  );
   const experienceTimeline = data.experience.length ? data.experience : fallbackExperienceTimeline;
   const educationTimeline = data.education.length ? data.education : fallbackEducationTimeline;
   const profileImageUrl = data.profile.profileImage?.url ?? null;
   const initials = getInitials(data.profile.displayName);
   const heroMetrics = [
-    { value: 'CS', label: 'Undergraduate' },
-    { value: 'AI/ML', label: 'Engineering path' },
+    { value: content.heroMetricOneValue || data.profile.yearsLabel, label: content.heroMetricOneLabel || data.profile.yearsLabel },
+    { value: content.heroMetricTwoValue || data.profile.projectsLabel, label: content.heroMetricTwoLabel || data.profile.projectsLabel },
     { value: `${data.skillCategories.length}`, label: 'Skill clusters' },
     { value: `${data.projects.length}+`, label: 'Projects' },
   ];
@@ -262,13 +264,13 @@ export default async function HomePage() {
               <div className="hero-copy">
                 <span className="status-pill">
                   <Sparkles className="h-3.5 w-3.5" />
-                  Available for AI/ML opportunities
+                  {content.heroStatus}
                 </span>
                 <p className="mt-7 text-sm uppercase tracking-[0.28em] text-cyan-200">{data.hero.eyebrow}</p>
                 <h1 className="mt-3 max-w-4xl text-5xl font-black leading-[0.95] tracking-tight text-white md:text-7xl">
-                  {data.profile.displayName}
+                  {data.hero.headline || data.profile.displayName}
                 </h1>
-                <p className="mt-5 text-xl font-semibold text-cyan-200">{data.profile.role}</p>
+                <p className="mt-5 text-xl font-semibold text-cyan-200">{data.profile.displayName} / {data.profile.role}</p>
                 <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 md:text-lg">{data.hero.subheadline}</p>
                 <div className="mt-7 grid max-w-2xl grid-cols-2 gap-4 md:grid-cols-4">
                   {heroMetrics.map((metric) => (
@@ -314,7 +316,7 @@ export default async function HomePage() {
                         />
                       ) : null}
                     </div>
-                    {orbitSignals.map((signal, index) => (
+                    {heroOrbitSignals.map((signal, index) => (
                       <span key={signal} className={`orbit-signal orbit-signal-${index + 1}`}>
                         {signal}
                       </span>
@@ -331,7 +333,7 @@ export default async function HomePage() {
                           <Icon className="h-4 w-4 text-cyan-200" />
                           <div>
                             <strong>{stage.label}</strong>
-                            <small>{stage.detail}</small>
+                            <small>{stage.value}</small>
                           </div>
                         </div>
                       );
@@ -391,14 +393,13 @@ export default async function HomePage() {
               </aside>
 
               <div className="about-copy">
-                <p className="section-kicker">About</p>
-                <h2>Applied AI/ML systems with a computer science foundation.</h2>
+                <p className="section-kicker">{content.aboutKicker}</p>
+                <h2>{content.aboutHeading}</h2>
                 <p>
                   {data.profile.about || 'LLM apps, ML systems, Python, RAG, evaluation, and MLOps.'}
                 </p>
                 <p>
-                  The portfolio is arranged around employer-readable evidence: technical direction, project cards,
-                  stack visibility, resume access, and a private contact workflow.
+                  {content.aboutBody}
                 </p>
                 <div className="mt-8 grid gap-3 sm:grid-cols-3">
                   {aboutSignals.map((signal) => {
@@ -422,30 +423,42 @@ export default async function HomePage() {
           <div className="container-wide">
             <div className="section-heading-row">
               <div>
-                <p className="section-kicker">Capabilities</p>
-                <h2>Technical Stack</h2>
+                <p className="section-kicker">{content.skillsKicker}</p>
+                <h2>{content.skillsHeading}</h2>
               </div>
-              <p>LLMs / ML / MLOps / Python</p>
+              <p>{content.skillsSummary}</p>
             </div>
             <div className="capability-grid">
-              {data.skillCategories.map((category) => (
+              {data.skillCategories.map((category) => {
+                const averageProficiency = category.skills.length
+                  ? category.skills.reduce((total, skill) => total + clampPercent(skill.proficiency), 0) / category.skills.length
+                  : 70;
+
+                return (
                 <div key={category.id} className="skill-panel group">
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="font-semibold text-cyan-100">{category.name}</h3>
                     <Layers3 className="h-4 w-4 text-emerald-200 opacity-75 transition group-hover:opacity-100" />
                   </div>
                   <div className="mt-5 h-1.5 overflow-hidden rounded-lg bg-white/8">
-                    <div className="h-full w-4/5 rounded-lg bg-gradient-to-r from-cyan-300 to-emerald-300" />
+                    <div
+                      className="h-full rounded-lg bg-gradient-to-r from-cyan-300 to-emerald-300"
+                      style={{ width: `${averageProficiency}%` }}
+                    />
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {category.skills.map((skill) => (
-                      <span key={skill.id} className="tech-chip compact">
-                        {skill.name}
+                      <span key={skill.id} className="tech-chip compact skill-token">
+                        <span>{skill.name}</span>
+                        <span className="skill-token-meter">
+                          <i style={{ width: `${clampPercent(skill.proficiency)}%` }} />
+                        </span>
                       </span>
                     ))}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </SectionReveal>
@@ -454,11 +467,11 @@ export default async function HomePage() {
           <div className="container-wide">
             <div className="section-heading-row">
               <div>
-                <p className="section-kicker">Selected Work</p>
-                <h2>Projects</h2>
+                <p className="section-kicker">{content.projectsKicker}</p>
+                <h2>{content.projectsHeading}</h2>
               </div>
               <Link href="/projects" className="inline-flex items-center gap-2 text-sm text-cyan-200 hover:text-white">
-                View all projects
+                {content.projectsLinkLabel}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
@@ -474,10 +487,10 @@ export default async function HomePage() {
           <div className="container-wide">
             <div className="section-heading-row">
               <div>
-                <p className="section-kicker">Process</p>
-                <h2>How I build proof.</h2>
+                <p className="section-kicker">{content.processKicker}</p>
+                <h2>{content.processHeading}</h2>
               </div>
-              <p>Scope / build / evaluate / publish</p>
+              <p>{content.processSummary}</p>
             </div>
             <div className="process-grid">
               {processSteps.map((step, index) => {
@@ -500,10 +513,10 @@ export default async function HomePage() {
           <div className="container-wide">
             <div className="section-heading-row">
               <div>
-                <p className="section-kicker">Background</p>
-                <h2>Experience</h2>
+                <p className="section-kicker">{content.experienceKicker}</p>
+                <h2>{content.experienceHeading}</h2>
               </div>
-              <p>Timeline / projects / applied systems</p>
+              <p>{content.experienceSummary}</p>
             </div>
             <div className="portfolio-timeline">
               {experienceTimeline.map((item, index) => (
@@ -525,10 +538,10 @@ export default async function HomePage() {
           <div className="container-wide">
             <div className="section-heading-row">
               <div>
-                <p className="section-kicker">Education</p>
-                <h2>CS foundation and AI/ML focus.</h2>
+                <p className="section-kicker">{content.educationKicker}</p>
+                <h2>{content.educationHeading}</h2>
               </div>
-              <p>Coursework / credentials / portfolio evidence</p>
+              <p>{content.educationSummary}</p>
             </div>
             <div className="education-grid">
               {educationTimeline.map((item) => (
@@ -557,8 +570,8 @@ export default async function HomePage() {
         {data.achievements.length > 0 ? (
           <SectionReveal className="portfolio-section">
             <div className="container-wide">
-              <p className="section-kicker">Achievements</p>
-              <h2 className="mt-3 text-3xl font-semibold text-white">Achievements and hackathons.</h2>
+              <p className="section-kicker">{content.achievementsKicker}</p>
+              <h2 className="mt-3 text-3xl font-semibold text-white">{content.achievementsHeading}</h2>
               <div className="mt-8 grid gap-5 md:grid-cols-2">
                 {data.achievements.map((item) => (
                   <div key={item.id} className="glass-panel rounded-lg p-5">
@@ -576,19 +589,15 @@ export default async function HomePage() {
           <div className="container-wide">
             <div className="contact-band">
               <div>
-                <p className="section-kicker">Contact</p>
+                <p className="section-kicker">{content.contactKicker}</p>
                 <h2 className="mt-3 text-4xl font-semibold leading-tight text-white md:text-5xl">
-                  Start a conversation.
+                  {content.contactHeading}
                 </h2>
                 <p className="mt-4 max-w-xl text-slate-300">
-                  Open to internships, research, and AI project work. Messages are saved privately for review.
+                  {content.contactBody}
                 </p>
                 <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                  {[
-                    { label: 'Availability', value: 'Internship' },
-                    { label: 'Direction', value: 'AI/ML' },
-                    { label: 'Response', value: 'Private inbox' },
-                  ].map((item) => (
+                  {contactTiles.map((item) => (
                     <div key={item.label} className="info-tile small">
                       <CheckCircle2 className="h-4 w-4 text-cyan-200" />
                       <span>{item.label}</span>
@@ -616,16 +625,16 @@ export default async function HomePage() {
 
         <section className="final-cta">
           <div className="container-wide text-center">
-            <p className="section-kicker">Next Step</p>
-            <h2>Ready to review AI/ML project evidence?</h2>
-            <p>Explore projects, preview the resume, or send a direct message.</p>
+            <p className="section-kicker">{content.finalCtaKicker}</p>
+            <h2>{content.finalCtaHeading}</h2>
+            <p>{content.finalCtaBody}</p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/projects" className="action-primary">
-                View Projects
+              <Link href={content.finalCtaPrimaryHref} className="action-primary">
+                {content.finalCtaPrimaryLabel}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
-              <Link href="/resume" className="action-secondary">
-                Preview Resume
+              <Link href={content.finalCtaSecondaryHref} className="action-secondary">
+                {content.finalCtaSecondaryLabel}
                 <Download className="h-4 w-4" />
               </Link>
             </div>

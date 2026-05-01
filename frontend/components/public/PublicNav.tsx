@@ -13,6 +13,9 @@ async function getPublicNavSettings() {
             where: { id: 1 },
             select: {
                 siteName: true,
+                navTagline: true,
+                navCtaLabel: true,
+                navCtaHref: true,
                 showDemosInNav: true,
             },
         });
@@ -24,6 +27,9 @@ async function getPublicNavSettings() {
 export default async function PublicNav() {
     const siteSettings = await getPublicNavSettings();
     const siteName = siteSettings?.siteName ?? 'Portfolio';
+    const navTagline = siteSettings?.navTagline ?? 'AI/ML portfolio';
+    const navCtaLabel = siteSettings?.navCtaLabel ?? "Let's Talk";
+    const navCtaHref = siteSettings?.navCtaHref ?? '/#contact';
     const showDemosInNav = siteSettings?.showDemosInNav ?? false;
 
     const links = [
@@ -44,7 +50,7 @@ export default async function PublicNav() {
                     <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(34,211,238,0.85)]" />
                     <span className="grid min-w-0">
                         <span className="truncate text-sm font-semibold uppercase tracking-[0.22em]">{siteName}</span>
-                        <span className="hidden text-[0.7rem] font-medium text-cyan-200 sm:block">AI/ML portfolio</span>
+                        <span className="hidden text-[0.7rem] font-medium text-cyan-200 sm:block">{navTagline}</span>
                     </span>
                 </Link>
 
@@ -61,10 +67,10 @@ export default async function PublicNav() {
                 </div>
 
                 <Link
-                    href="/#contact"
+                    href={navCtaHref}
                     className="hidden items-center gap-2 rounded-full bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 lg:inline-flex"
                 >
-                    Let&apos;s Talk
+                    {navCtaLabel}
                     <ArrowRight className="h-4 w-4" />
                 </Link>
             </div>
