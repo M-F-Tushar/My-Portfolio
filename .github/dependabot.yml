@@ -4,9 +4,9 @@
 
 version: 2
 updates:
-  # Frontend (npm) dependencies
+  # Frontend workspace npm dependencies. The lockfile lives at the repo root.
   - package-ecosystem: "npm"
-    directory: "/frontend"
+    directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -40,49 +40,6 @@ updates:
     ignore:
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
-
-  # Backend (pip) dependencies
-  - package-ecosystem: "pip"
-    directory: "/backend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Dhaka"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "M-F-Tushar"
-    labels:
-      - "dependencies"
-      - "backend"
-      - "automated"
-    commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
-    groups:
-      python-dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  # Docker base images
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Dhaka"
-    reviewers:
-      - "M-F-Tushar"
-    labels:
-      - "dependencies"
-      - "docker"
-      - "automated"
-    commit-message:
-      prefix: "chore(docker)"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"

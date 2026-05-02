@@ -78,6 +78,13 @@ npx prisma db push
 npm run db:seed
 ```
 
+From the repository root, the same commands are available as:
+
+```powershell
+npm run db:push
+npm run db:seed
+```
+
 If you later add committed Prisma migrations, production deployment should use:
 
 ```powershell
@@ -100,4 +107,7 @@ Create a Vercel Blob store and add `BLOB_READ_WRITE_TOKEN` to Vercel. Then log i
 - Resume PDF is uploaded.
 - Unfinished demos and achievements remain hidden.
 - Contact form successfully saves a test message.
+- `/api/health` returns `database: "ok"` when database-backed admin/contact features are expected to work.
 - Preview protection is configured the way you want.
+
+See [PRODUCTION_RUNBOOK.md](PRODUCTION_RUNBOOK.md) for the full GitHub -> Vercel -> custom domain -> Supabase checklist.

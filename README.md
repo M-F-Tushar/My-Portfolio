@@ -308,6 +308,8 @@ npm run test
 npm run type-check
 npm run lint
 npm run db:generate
+npm run db:push
+npm run db:deploy
 npm run db:migrate
 npm run db:seed
 ```
@@ -317,7 +319,7 @@ Important notes:
 - `npm run dev` starts the Next.js app from `frontend/`.
 - `npm run build` runs the production build from `frontend/`.
 - `npm run db:migrate` uses Prisma migrate dev. Use it when you are intentionally creating a migration during development.
-- If you only need to sync the current schema to a fresh database, `cd frontend && npx prisma db push` is the simpler setup path.
+- If you only need to sync the current schema to a fresh database, `npm run db:push` is the simpler setup path.
 
 ## Verification Before Pushing
 
@@ -374,6 +376,8 @@ Required production setup:
 - Keep demos, achievements, and hackathons hidden until real content is ready.
 
 See [docs/DEPLOYMENT_VERCEL.md](docs/DEPLOYMENT_VERCEL.md) for the focused deployment checklist.
+
+For the full end-to-end production path, including GitHub Actions, Vercel deployment verification, custom domains, and Supabase readiness, see [docs/PRODUCTION_RUNBOOK.md](docs/PRODUCTION_RUNBOOK.md).
 
 ## Resume Workflow
 
@@ -460,6 +464,7 @@ The deployment is ready, but Vercel preview protection is enabled. View while lo
 - [Admin Guide](docs/ADMIN_GUIDE.md)
 - [Environment Variables](docs/ENVIRONMENT.md)
 - [Vercel Deployment](docs/DEPLOYMENT_VERCEL.md)
+- [Production Runbook](docs/PRODUCTION_RUNBOOK.md)
 
 ## License
 

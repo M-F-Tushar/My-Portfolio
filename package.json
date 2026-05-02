@@ -17,6 +17,8 @@
     "lint:frontend": "cd frontend && npm run lint",
     "type-check": "cd frontend && npm run type-check",
     "db:generate": "cd frontend && npx prisma generate",
+    "db:push": "cd frontend && npx prisma db push",
+    "db:deploy": "cd frontend && npx prisma migrate deploy",
     "db:migrate": "cd frontend && npx prisma migrate dev",
     "db:seed": "cd frontend && npm run db:seed"
   },
