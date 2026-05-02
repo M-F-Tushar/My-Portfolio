@@ -23,10 +23,6 @@ const nextConfig = {
                         value: 'nosniff'
                     },
                     {
-                        key: 'X-Frame-Options',
-                        value: 'DENY'
-                    },
-                    {
                         key: 'X-XSS-Protection',
                         value: '1; mode=block'
                     },
@@ -52,7 +48,7 @@ const nextConfig = {
                             "font-src 'self' https://fonts.gstatic.com data:",
                             "img-src 'self' data: https: blob:",
                             "connect-src 'self' https://*.vercel.app https://*.supabase.co wss://*.supabase.co https://*.upstash.io https://www.google-analytics.com http://localhost:*",
-                            "frame-ancestors 'none'",
+                            "frame-ancestors 'self' https://vercel.com https://*.vercel.com",
                             "base-uri 'self'",
                             "form-action 'self'",
                             "upgrade-insecure-requests",
