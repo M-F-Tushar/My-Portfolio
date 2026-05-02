@@ -28,7 +28,9 @@ import SectionReveal from '@/components/public/SectionReveal';
 import ProjectCard, { type ProjectCardProject } from '@/components/public/ProjectCard';
 import ContactForm from '@/components/public/ContactForm';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
+const DATABASE_READ_TIMEOUT_MS = 900;
 
 const fallbackProfile = {
   displayName: 'Mahir Faysal Tusher',
@@ -111,6 +113,21 @@ const fallbackEducationTimeline = [
   },
 ];
 
+function withDatabaseTimeout<T>(promise: Promise<T>) {
+  let timer: ReturnType<typeof setTimeout>;
+
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      reject(new Error('Database content read timed out'));
+    }, DATABASE_READ_TIMEOUT_MS);
+  });
+
+  return Promise.race([
+    promise.finally(() => clearTimeout(timer)),
+    timeout,
+  ]);
+}
+
 async function loadHomeData() {
   const fallbackData = {
     profile: fallbackProfile,
@@ -145,7 +162,7 @@ async function loadHomeData() {
       certifications,
       achievements,
       socials,
-    ] = await Promise.all([
+    ] = await withDatabaseTimeout(Promise.all([
       prisma.profile.findUnique({
         where: { id: 1 },
         include: { profileImage: true },
@@ -168,7 +185,7 @@ async function loadHomeData() {
       prisma.certification.findMany({ where: { visible: true }, orderBy: { sortOrder: 'asc' } }),
       prisma.achievement.findMany({ where: { visible: true }, orderBy: { sortOrder: 'asc' } }),
       prisma.socialLink.findMany({ where: { visible: true }, orderBy: { sortOrder: 'asc' } }),
-    ]);
+    ]));
 
     return {
       profile: profile ?? fallbackProfile,

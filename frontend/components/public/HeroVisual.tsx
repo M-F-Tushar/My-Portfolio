@@ -1,7 +1,3 @@
-'use client';
-
-import { motion, useReducedMotion } from 'framer-motion';
-
 const graphPaths = [
     'M 6 22 C 18 14 28 30 40 21 S 62 14 74 25 S 88 42 96 32',
     'M 4 48 C 18 42 25 58 38 50 S 56 36 70 48 S 86 66 98 56',
@@ -27,8 +23,6 @@ const neuralNodes = [
 ];
 
 export default function HeroVisual() {
-    const prefersReducedMotion = useReducedMotion();
-
     return (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_38%,rgba(34,211,238,0.2),transparent_32%),radial-gradient(circle_at_42%_28%,rgba(52,211,153,0.1),transparent_30%),linear-gradient(180deg,rgba(2,6,23,0),rgba(2,6,23,0.78))]" />
@@ -43,45 +37,35 @@ export default function HeroVisual() {
                     </linearGradient>
                 </defs>
                 {graphPaths.map((path, index) => (
-                    <motion.path
+                    <path
                         key={path}
                         d={path}
+                        className={`hero-neural-path hero-neural-path-${index + 1}`}
                         fill="none"
                         stroke="url(#neural-trace)"
                         strokeLinecap="round"
                         strokeWidth="0.18"
                         strokeDasharray="1.1 2"
-                        animate={prefersReducedMotion ? { strokeDashoffset: 0 } : { strokeDashoffset: [0, -16] }}
-                        transition={{ duration: 13 + index * 1.7, repeat: Infinity, ease: 'linear' }}
                     />
                 ))}
             </svg>
 
             {neuralNodes.map((node) => (
-                <motion.span
+                <span
                     key={`${node.left}-${node.top}`}
-                    className="absolute rounded-full border border-cyan-100/30 bg-cyan-200/80 shadow-[0_0_28px_rgba(34,211,238,0.42)]"
+                    className="hero-neural-node absolute rounded-full border border-cyan-100/30 bg-cyan-200/80 shadow-[0_0_28px_rgba(34,211,238,0.42)]"
                     style={{
                         left: `${node.left}%`,
                         top: `${node.top}%`,
                         width: `${node.size}rem`,
                         height: `${node.size}rem`,
+                        animationDelay: `${node.delay}s`,
                     }}
-                    animate={prefersReducedMotion ? { opacity: 0.65, scale: 1 } : { opacity: [0.34, 0.95, 0.45], scale: [1, 1.16, 1] }}
-                    transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: node.delay }}
                 />
             ))}
 
-            <motion.div
-                className="absolute right-[8%] top-[14%] h-[34rem] w-[34rem] rounded-full border border-cyan-200/18"
-                animate={prefersReducedMotion ? { rotate: 0 } : { rotate: 360 }}
-                transition={{ duration: 34, repeat: Infinity, ease: 'linear' }}
-            />
-            <motion.div
-                className="absolute right-[14%] top-[20%] h-[22rem] w-[22rem] rounded-full border border-emerald-200/14"
-                animate={prefersReducedMotion ? { rotate: 0 } : { rotate: -360 }}
-                transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-            />
+            <div className="hero-field-orbit hero-field-orbit-large absolute right-[8%] top-[14%] h-[34rem] w-[34rem] rounded-full border border-cyan-200/18" />
+            <div className="hero-field-orbit hero-field-orbit-small absolute right-[14%] top-[20%] h-[22rem] w-[22rem] rounded-full border border-emerald-200/14" />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.025),transparent)] bg-[size:100%_14px] opacity-20" />
         </div>
     );

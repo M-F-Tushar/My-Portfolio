@@ -431,6 +431,42 @@
         will-change: transform;
     }
 
+    .hero-neural-path {
+        animation: neural-dash 13s linear infinite;
+    }
+
+    .hero-neural-path-2 {
+        animation-duration: 14.7s;
+    }
+
+    .hero-neural-path-3 {
+        animation-duration: 16.4s;
+    }
+
+    .hero-neural-path-4 {
+        animation-duration: 18.1s;
+    }
+
+    .hero-neural-path-5 {
+        animation-duration: 19.8s;
+    }
+
+    .hero-neural-node {
+        animation: neural-node-pulse 5.6s ease-in-out infinite;
+        opacity: 0.48;
+        transform: translateZ(0);
+    }
+
+    .hero-field-orbit {
+        animation: hero-orbit-spin 34s linear infinite;
+        transform-origin: center;
+    }
+
+    .hero-field-orbit-small {
+        animation-duration: 28s;
+        animation-direction: reverse;
+    }
+
     .hero-ai-stage::before,
     .hero-ai-stage::after {
         content: '';
@@ -1535,6 +1571,31 @@
 
         50% {
             opacity: 1;
+        }
+    }
+
+    @keyframes neural-dash {
+        to {
+            stroke-dashoffset: -16;
+        }
+    }
+
+    @keyframes neural-node-pulse {
+        0%,
+        100% {
+            opacity: 0.4;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.95;
+            transform: scale(1.16);
+        }
+    }
+
+    @keyframes hero-orbit-spin {
+        to {
+            transform: rotate(360deg);
         }
     }
 }

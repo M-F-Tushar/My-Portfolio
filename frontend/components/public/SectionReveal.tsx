@@ -1,7 +1,4 @@
-'use client';
-
 import type { ReactNode } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 
 interface SectionRevealProps {
     id?: string;
@@ -11,26 +8,13 @@ interface SectionRevealProps {
 }
 
 export default function SectionReveal({ id, children, className, delay = 0 }: SectionRevealProps) {
-    const prefersReducedMotion = useReducedMotion();
-
-    if (prefersReducedMotion) {
-        return <section id={id} className={className}>{children}</section>;
-    }
-
     return (
-        <motion.section
+        <section
             id={id}
             className={className}
-            initial={false}
-            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            viewport={{ once: true, amount: 0.24 }}
-            transition={{
-                duration: 0.7,
-                ease: [0.16, 1, 0.3, 1],
-                delay,
-            }}
+            style={delay ? { animationDelay: `${delay}s` } : undefined}
         >
             {children}
-        </motion.section>
+        </section>
     );
 }
