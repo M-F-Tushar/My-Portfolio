@@ -21,7 +21,7 @@ export default function SectionReveal({ id, children, className, delay = 0 }: Se
         <motion.section
             id={id}
             className={className}
-            initial={{ opacity: 0, y: 18, filter: 'blur(8px)' }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             viewport={{ once: true, amount: 0.24 }}
             transition={{

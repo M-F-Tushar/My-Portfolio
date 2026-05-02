@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
+import { homepageContentDefaults } from '@/lib/content/homepage';
 import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import SectionReveal from '@/components/public/SectionReveal';
@@ -7,6 +8,7 @@ import SectionReveal from '@/components/public/SectionReveal';
 export const dynamic = 'force-dynamic';
 
 type DemoPageState = {
+    content: Pick<typeof homepageContentDefaults, 'demosPageKicker' | 'demosPageHeading' | 'demosPageSummary'>;
     demos: Array<{
         id: number;
         title: string;
@@ -26,28 +28,41 @@ function formatStatusLabel(status: string) {
 async function loadDemosPageData(): Promise<DemoPageState> {
     if (!hasDatabaseUrl()) {
         return {
+            content: homepageContentDefaults,
             demos: [],
             loadingIssue: false,
         };
     }
 
     try {
-        const demos = await prisma.demo.findMany({
-            where: {
-                visible: true,
-                status: {
-                    in: ['CASE_STUDY_ONLY', 'EXTERNAL_DEMO', 'EMBEDDED_DEMO'],
+        const [demos, content] = await Promise.all([
+            prisma.demo.findMany({
+                where: {
+                    visible: true,
+                    status: {
+                        in: ['CASE_STUDY_ONLY', 'EXTERNAL_DEMO', 'EMBEDDED_DEMO'],
+                    },
                 },
-            },
-            orderBy: [{ sortOrder: 'asc' }, { updatedAt: 'desc' }],
-        });
+                orderBy: [{ sortOrder: 'asc' }, { updatedAt: 'desc' }],
+            }),
+            prisma.homepageContent.findUnique({
+                where: { id: 1 },
+                select: {
+                    demosPageKicker: true,
+                    demosPageHeading: true,
+                    demosPageSummary: true,
+                },
+            }),
+        ]);
 
         return {
+            content: content ?? homepageContentDefaults,
             demos,
             loadingIssue: false,
         };
     } catch {
         return {
+            content: homepageContentDefaults,
             demos: [],
             loadingIssue: true,
         };
@@ -55,7 +70,7 @@ async function loadDemosPageData(): Promise<DemoPageState> {
 }
 
 export default async function DemosPage() {
-    const { demos, loadingIssue } = await loadDemosPageData();
+    const { content, demos, loadingIssue } = await loadDemosPageData();
     const hasDemos = demos.length > 0;
 
     return (
@@ -64,13 +79,12 @@ export default async function DemosPage() {
             <main className="space-y-12 pb-16">
                 <SectionReveal className="container-wide py-14 md:py-16">
                     <div className="max-w-3xl">
-                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Demos</p>
+                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">{content.demosPageKicker}</p>
                         <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight text-white md:text-6xl">
-                            Live demos appear here once they are enabled and ready.
+                            {content.demosPageHeading}
                         </h1>
                         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-                            This page only surfaces public demo records that have been marked visible and published
-                            from the CMS.
+                            {content.demosPageSummary}
                         </p>
                     </div>
                 </SectionReveal>

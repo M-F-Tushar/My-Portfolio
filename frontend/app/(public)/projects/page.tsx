@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
+import { homepageContentDefaults } from '@/lib/content/homepage';
 import { hasDatabaseUrl } from '@/lib/env';
 import PublicNav from '@/components/public/PublicNav';
 import SectionReveal from '@/components/public/SectionReveal';
@@ -11,6 +12,7 @@ type PublicProject = ProjectCardProject & { slug: string };
 
 type ProjectsPageState = {
     projects: PublicProject[];
+    content: Pick<typeof homepageContentDefaults, 'projectsPageKicker' | 'projectsPageHeading' | 'projectsPageSummary'>;
     loadingIssue: boolean;
 };
 
@@ -25,6 +27,7 @@ const fallbackProjects: PublicProject[] = [
         caseStudyUrl: null,
         githubUrl: null,
         liveDemoUrl: null,
+        image: null,
     },
     {
         slug: 'ml-learning-lab',
@@ -36,6 +39,7 @@ const fallbackProjects: PublicProject[] = [
         caseStudyUrl: null,
         githubUrl: null,
         liveDemoUrl: null,
+        image: null,
     },
 ];
 
@@ -43,30 +47,44 @@ async function loadProjectsPageData(): Promise<ProjectsPageState> {
     if (!hasDatabaseUrl()) {
         return {
             projects: fallbackProjects,
+            content: homepageContentDefaults,
             loadingIssue: false,
         };
     }
 
     try {
-        const projects = await prisma.project.findMany({
-            where: { visible: true },
-            orderBy: [{ sortOrder: 'asc' }, { updatedAt: 'desc' }],
-        });
+        const [projects, content] = await Promise.all([
+            prisma.project.findMany({
+                where: { visible: true },
+                include: { image: true },
+                orderBy: [{ sortOrder: 'asc' }, { updatedAt: 'desc' }],
+            }),
+            prisma.homepageContent.findUnique({
+                where: { id: 1 },
+                select: {
+                    projectsPageKicker: true,
+                    projectsPageHeading: true,
+                    projectsPageSummary: true,
+                },
+            }),
+        ]);
 
         return {
             projects,
+            content: content ?? homepageContentDefaults,
             loadingIssue: false,
         };
     } catch {
         return {
             projects: [],
+            content: homepageContentDefaults,
             loadingIssue: true,
         };
     }
 }
 
 export default async function ProjectsPage() {
-    const { projects, loadingIssue } = await loadProjectsPageData();
+    const { projects, content, loadingIssue } = await loadProjectsPageData();
 
     const hasProjects = projects.length > 0;
 
@@ -76,12 +94,12 @@ export default async function ProjectsPage() {
             <main className="space-y-12 pb-16">
                 <SectionReveal className="container-wide py-14 md:py-16">
                     <div className="max-w-3xl">
-                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">Projects</p>
+                        <p className="text-sm uppercase tracking-[0.28em] text-cyan-200">{content.projectsPageKicker}</p>
                         <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight text-white md:text-6xl">
-                            Projects
+                            {content.projectsPageHeading}
                         </h1>
                         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-                            AI/ML builds / stack / links / status
+                            {content.projectsPageSummary}
                         </p>
                     </div>
                 </SectionReveal>

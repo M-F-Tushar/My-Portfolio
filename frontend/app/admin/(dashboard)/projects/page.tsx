@@ -1,5 +1,6 @@
 import { ProjectStatus } from '@prisma/client';
 import FormField from '@/components/admin/FormField';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/session';
 import { toSlug } from '@/lib/content/json';
@@ -28,6 +29,7 @@ function readProjectData(formData: FormData) {
     const title = requiredString(formData, 'title', 'Title');
     const requestedSlug = optionalString(formData, 'slug') ?? toSlug(title);
     const slug = toSlug(requestedSlug);
+    const imageIdValue = optionalString(formData, 'imageId');
 
     if (!slug) {
         throw new Error('Slug is required.');
@@ -39,6 +41,7 @@ function readProjectData(formData: FormData) {
         description: requiredString(formData, 'description', 'Description'),
         category: requiredString(formData, 'category', 'Category'),
         techStack: listFromForm(formData, 'techStack'),
+        imageId: imageIdValue ? intWithDefault(formData, 'imageId') : null,
         githubUrl: optionalString(formData, 'githubUrl'),
         liveDemoUrl: optionalString(formData, 'liveDemoUrl'),
         caseStudyUrl: optionalString(formData, 'caseStudyUrl'),
@@ -75,6 +78,7 @@ async function deleteProject(formData: FormData) {
 
 export default async function AdminProjectsPage() {
     const projects = await prisma.project.findMany({
+        include: { image: true },
         orderBy: [{ sortOrder: 'asc' }, { updatedAt: 'desc' }],
     });
 
@@ -111,6 +115,7 @@ export default async function AdminProjectsPage() {
                                 featured: project.featured,
                                 visible: project.visible,
                                 sortOrder: project.sortOrder,
+                                image: project.image,
                             }}
                         />
                         <form action={deleteProject}>
@@ -144,6 +149,14 @@ type ProjectFormValues = {
     featured?: boolean;
     visible?: boolean;
     sortOrder?: number;
+    image?: {
+        id: number;
+        url: string;
+        key: string | null;
+        fileName: string;
+        mimeType: string;
+        fileSize: number;
+    } | null;
 };
 
 function ProjectForm({
@@ -158,6 +171,12 @@ function ProjectForm({
     return (
         <form action={action} className="space-y-5 rounded-lg border border-white/10 bg-slate-900/70 p-5">
             {values.id ? <input type="hidden" name="id" value={values.id} /> : null}
+            <ImageUploadField
+                fieldName="imageId"
+                initialMedia={values.image ?? null}
+                label="Project image"
+                helperText="Optional visual shown on public project cards."
+            />
             <div className="grid gap-5 md:grid-cols-2">
                 <FormField label="Title" name="title" required defaultValue={values.title} />
                 <FormField label="Slug" name="slug" hint="Leave blank when creating to use the title." defaultValue={values.slug} />

@@ -2,141 +2,87 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 
-const nodes = [
-    { cx: 16, cy: 22, r: 2.4, delay: 0 },
-    { cx: 33, cy: 16, r: 1.8, delay: 0.2 },
-    { cx: 52, cy: 24, r: 2.8, delay: 0.4 },
-    { cx: 70, cy: 20, r: 1.9, delay: 0.6 },
-    { cx: 84, cy: 30, r: 2.1, delay: 0.8 },
-    { cx: 24, cy: 48, r: 2.1, delay: 1 },
-    { cx: 44, cy: 42, r: 3.2, delay: 1.2 },
-    { cx: 64, cy: 52, r: 2.3, delay: 1.4 },
-    { cx: 78, cy: 64, r: 2, delay: 1.6 },
-    { cx: 35, cy: 72, r: 1.8, delay: 1.8 },
-    { cx: 54, cy: 82, r: 2.6, delay: 2 },
+const graphPaths = [
+    'M 6 22 C 18 14 28 30 40 21 S 62 14 74 25 S 88 42 96 32',
+    'M 4 48 C 18 42 25 58 38 50 S 56 36 70 48 S 86 66 98 56',
+    'M 10 78 C 24 66 34 82 48 70 S 70 58 88 76',
+    'M 22 12 C 32 30 36 48 48 62 S 66 78 82 90',
+    'M 76 10 C 68 28 62 40 66 56 S 78 76 70 92',
 ];
 
-const links = [
-    'M 16 22 L 33 16 L 52 24 L 70 20 L 84 30',
-    'M 24 48 L 44 42 L 64 52 L 78 64',
-    'M 16 22 L 24 48 L 35 72 L 54 82',
-    'M 33 16 L 44 42 L 52 24 L 64 52',
-    'M 35 72 L 44 42 L 78 64',
+const neuralNodes = [
+    { left: 12, top: 22, size: 0.85, delay: 0 },
+    { left: 28, top: 31, size: 0.62, delay: 0.2 },
+    { left: 41, top: 22, size: 0.72, delay: 0.4 },
+    { left: 58, top: 18, size: 0.95, delay: 0.6 },
+    { left: 75, top: 26, size: 0.7, delay: 0.8 },
+    { left: 89, top: 38, size: 0.84, delay: 1 },
+    { left: 18, top: 52, size: 0.74, delay: 1.2 },
+    { left: 38, top: 50, size: 1.05, delay: 1.4 },
+    { left: 56, top: 42, size: 0.66, delay: 1.6 },
+    { left: 72, top: 54, size: 0.9, delay: 1.8 },
+    { left: 27, top: 76, size: 0.68, delay: 2 },
+    { left: 48, top: 70, size: 0.82, delay: 2.2 },
+    { left: 69, top: 82, size: 0.7, delay: 2.4 },
 ];
 
 export default function HeroVisual() {
     const prefersReducedMotion = useReducedMotion();
-    const ringTransition = prefersReducedMotion
-        ? { duration: 0 }
-        : { duration: 24, repeat: Infinity, ease: 'linear' };
-    const nodeTransition = prefersReducedMotion
-        ? { duration: 0 }
-        : { duration: 5.5, repeat: Infinity, ease: 'easeInOut' };
 
     return (
-        <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 overflow-hidden"
-        >
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.0),rgba(2,6,23,0.62))]" />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(34,211,238,0.04)_50%,transparent_100%)] opacity-80" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_38%,rgba(34,211,238,0.2),transparent_32%),radial-gradient(circle_at_42%_28%,rgba(52,211,153,0.1),transparent_30%),linear-gradient(180deg,rgba(2,6,23,0),rgba(2,6,23,0.78))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,211,238,0.07)_1px,transparent_1px),linear-gradient(rgba(148,163,184,0.05)_1px,transparent_1px)] bg-[size:88px_88px] opacity-30" />
 
-            <motion.div
-                className="absolute left-[12%] top-[14%] h-[26rem] w-[26rem] rounded-full border border-cyan-300/18"
-                animate={prefersReducedMotion ? { rotate: 0 } : { rotate: 360 }}
-                transition={ringTransition}
-                style={{ transformOrigin: '50% 50%' }}
-            />
-            <motion.div
-                className="absolute right-[10%] top-[18%] h-[18rem] w-[18rem] rounded-full border border-emerald-300/14"
-                animate={prefersReducedMotion ? { rotate: 0 } : { rotate: -360 }}
-                transition={{ ...ringTransition, duration: 30 }}
-                style={{ transformOrigin: '50% 50%' }}
-            />
-
-            <svg
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-                className="absolute inset-0 h-full w-full"
-            >
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full opacity-80">
                 <defs>
-                    <linearGradient id="hero-wire" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="rgba(34, 211, 238, 0.18)" />
-                        <stop offset="50%" stopColor="rgba(52, 211, 153, 0.32)" />
-                        <stop offset="100%" stopColor="rgba(56, 189, 248, 0.14)" />
+                    <linearGradient id="neural-trace" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="rgba(34,211,238,0.06)" />
+                        <stop offset="48%" stopColor="rgba(34,211,238,0.44)" />
+                        <stop offset="100%" stopColor="rgba(52,211,153,0.18)" />
                     </linearGradient>
                 </defs>
-
-                {links.map((path, index) => (
+                {graphPaths.map((path, index) => (
                     <motion.path
                         key={path}
                         d={path}
                         fill="none"
-                        stroke="url(#hero-wire)"
-                        strokeWidth="0.18"
+                        stroke="url(#neural-trace)"
                         strokeLinecap="round"
-                        strokeDasharray="0.8 1.8"
-                        initial={false}
-                        animate={
-                            prefersReducedMotion
-                                ? { strokeDashoffset: 0 }
-                                : { strokeDashoffset: [0, -8] }
-                        }
-                        transition={{
-                            duration: 10 + index * 1.7,
-                            repeat: Infinity,
-                            ease: 'linear',
-                        }}
+                        strokeWidth="0.18"
+                        strokeDasharray="1.1 2"
+                        animate={prefersReducedMotion ? { strokeDashoffset: 0 } : { strokeDashoffset: [0, -16] }}
+                        transition={{ duration: 13 + index * 1.7, repeat: Infinity, ease: 'linear' }}
                     />
                 ))}
             </svg>
 
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.04)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.03),transparent)] bg-[size:100%_16px] opacity-15" />
-
-            {nodes.map((node) => (
+            {neuralNodes.map((node) => (
                 <motion.span
-                    key={`${node.cx}-${node.cy}`}
-                    className="absolute rounded-full bg-cyan-200/90 shadow-[0_0_18px_rgba(34,211,238,0.55)]"
+                    key={`${node.left}-${node.top}`}
+                    className="absolute rounded-full border border-cyan-100/30 bg-cyan-200/80 shadow-[0_0_28px_rgba(34,211,238,0.42)]"
                     style={{
-                        left: `${node.cx}%`,
-                        top: `${node.cy}%`,
-                        width: `${node.r * 0.55}rem`,
-                        height: `${node.r * 0.55}rem`,
+                        left: `${node.left}%`,
+                        top: `${node.top}%`,
+                        width: `${node.size}rem`,
+                        height: `${node.size}rem`,
                     }}
-                    animate={
-                        prefersReducedMotion
-                            ? { opacity: 0.7, scale: 1 }
-                            : {
-                                  opacity: [0.4, 1, 0.5],
-                                  scale: [1, 1.18, 1],
-                              }
-                    }
-                    transition={{
-                        ...nodeTransition,
-                        delay: node.delay,
-                    }}
+                    animate={prefersReducedMotion ? { opacity: 0.65, scale: 1 } : { opacity: [0.34, 0.95, 0.45], scale: [1, 1.16, 1] }}
+                    transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: node.delay }}
                 />
             ))}
 
             <motion.div
-                className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-300/20"
-                animate={prefersReducedMotion ? { scale: 1 } : { scale: [1, 1.06, 1] }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                }}
+                className="absolute right-[8%] top-[14%] h-[34rem] w-[34rem] rounded-full border border-cyan-200/18"
+                animate={prefersReducedMotion ? { rotate: 0 } : { rotate: 360 }}
+                transition={{ duration: 34, repeat: Infinity, ease: 'linear' }}
             />
             <motion.div
-                className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/12"
-                animate={prefersReducedMotion ? { scale: 1 } : { scale: [1, 0.96, 1] }}
-                transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                }}
+                className="absolute right-[14%] top-[20%] h-[22rem] w-[22rem] rounded-full border border-emerald-200/14"
+                animate={prefersReducedMotion ? { rotate: 0 } : { rotate: -360 }}
+                transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
             />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.025),transparent)] bg-[size:100%_14px] opacity-20" />
         </div>
     );
 }

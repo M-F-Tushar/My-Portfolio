@@ -16,7 +16,16 @@ async function main() {
     create: {},
   });
 
+  const existingHero = await prisma.hero.findUnique({ where: { id: 1 } });
+  const legacyHeroHeadline = 'Building practical AI systems from classroom foundations to production thinking.';
+
   await prisma.hero.upsert({
+    where: { id: 1 },
+    update: existingHero?.headline === legacyHeroHeadline ? { headline: 'AI / ML Engineering' } : {},
+    create: { headline: 'AI / ML Engineering' },
+  });
+
+  await prisma.homepageContent.upsert({
     where: { id: 1 },
     update: {},
     create: {},
